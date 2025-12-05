@@ -1,0 +1,252 @@
+/* Mascot Wrapper - Fixed Position */
+.mascot-wrapper {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Mascot Character */
+.mascot-character {
+  animation: mascot-idle 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(167, 139, 250, 0.4));
+  transition: transform 0.3s ease;
+}
+
+/* Idle Animation - Gentle Float */
+@keyframes mascot-idle {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+/* Body Breathing Effect */
+.mascot-body {
+  animation: body-breathe 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes body-breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+/* Eye Blink Animation */
+.mascot-eye-left,
+.mascot-eye-right {
+  animation: eye-blink 5s infinite;
+}
+
+.mascot-eye-right {
+  animation-delay: 0.1s;
+}
+
+@keyframes eye-blink {
+  0%, 96%, 100% {
+    transform: scaleY(1);
+  }
+  98% {
+    transform: scaleY(0.1);
+  }
+}
+
+/* Smile Animation */
+.mascot-smile {
+  animation: smile-wiggle 3s ease-in-out infinite;
+}
+
+@keyframes smile-wiggle {
+  0%, 100% {
+    d: path("M 38 63 Q 50 70 62 63");
+  }
+  50% {
+    d: path("M 38 63 Q 50 72 62 63");
+  }
+}
+
+/* Antenna Bounce */
+.mascot-antenna {
+  animation: antenna-bounce 2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes antenna-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Celebration Animation */
+.mascot-character.celebrating {
+  animation: mascot-celebrate 0.6s ease-in-out;
+}
+
+@keyframes mascot-celebrate {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.15) rotate(-5deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  75% {
+    transform: scale(1.15) rotate(-3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Speech Bubble */
+.mascot-bubble {
+  position: absolute;
+  bottom: 85px;
+  right: 0;
+  background: linear-gradient(135deg, #818CF8 0%, #A78BFA 100%);
+  color: white;
+  padding: 0.8rem 1.3rem;
+  border-radius: 18px;
+  font-size: 1rem;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(129, 140, 248, 0.5);
+  animation: bubble-appear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  pointer-events: none;
+}
+
+/* Speech Bubble Tail */
+.mascot-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 25px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #A78BFA;
+}
+
+@keyframes bubble-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Confetti Container */
+.confetti-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  pointer-events: none;
+}
+
+/* Individual Confetti Particles */
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 0;
+  animation: confetti-burst 0.8s ease-out forwards;
+}
+
+.confetti-1 {
+  background: #FCA5A5;
+  left: 50%;
+  top: 50%;
+  animation-delay: 0s;
+}
+
+.confetti-2 {
+  background: #FBBF24;
+  left: 50%;
+  top: 50%;
+  animation-delay: 0.1s;
+}
+
+.confetti-3 {
+  background: #A78BFA;
+  left: 50%;
+  top: 50%;
+  animation-delay: 0.05s;
+}
+
+.confetti-4 {
+  background: #34D399;
+  left: 50%;
+  top: 50%;
+  animation-delay: 0.15s;
+}
+
+.confetti-5 {
+  background: #60A5FA;
+  left: 50%;
+  top: 50%;
+  animation-delay: 0.08s;
+}
+
+@keyframes confetti-burst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx, 0), var(--ty, -40px)) scale(1);
+  }
+}
+
+.confetti-1 { --tx: -30px; --ty: -35px; }
+.confetti-2 { --tx: 30px; --ty: -40px; }
+.confetti-3 { --tx: -25px; --ty: -30px; }
+.confetti-4 { --tx: 25px; --ty: -35px; }
+.confetti-5 { --tx: 0px; --ty: -45px; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mascot-wrapper {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .mascot-character svg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .mascot-bubble {
+    font-size: 0.9rem;
+    padding: 0.7rem 1.1rem;
+    bottom: 75px;
+  }
+}
+
+/* Ensure mascot doesn't interfere with clicks */
+.mascot-wrapper * {
+  pointer-events: none;
+}

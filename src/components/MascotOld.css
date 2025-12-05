@@ -1,0 +1,144 @@
+/* Mascot Container */
+.mascot-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.mascot {
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 5px 15px rgba(255, 215, 0, 0.3));
+}
+
+/* Floating Animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(-5deg);
+  }
+}
+
+/* Eye Blink Animation */
+.mascot-eye {
+  animation: blink 4s infinite;
+}
+
+@keyframes blink {
+  0%, 96%, 100% {
+    transform: scaleY(1);
+  }
+  98% {
+    transform: scaleY(0.1);
+  }
+}
+
+/* Sparkle Animation */
+.sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.sparkle-1 {
+  animation-delay: 0s;
+}
+
+.sparkle-2 {
+  animation-delay: 0.7s;
+}
+
+.sparkle-3 {
+  animation-delay: 1.4s;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Praise Bubble */
+.mascot-praise {
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  animation: praiseAppear 0.3s ease, praiseBounce 0.5s ease 0.3s;
+  pointer-events: none;
+}
+
+.mascot-praise::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #764ba2;
+}
+
+@keyframes praiseAppear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes praiseBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mascot-container {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .mascot svg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .mascot-praise {
+    font-size: 0.95rem;
+    padding: 0.6rem 1.2rem;
+    bottom: 70px;
+  }
+}
+
+/* Make sure mascot doesn't interfere with other UI */
+.mascot-container * {
+  pointer-events: none;
+}

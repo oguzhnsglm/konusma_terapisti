@@ -1,0 +1,340 @@
+/* Storybook Page */
+.storybook-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FED7AA 100%);
+  padding: 2rem;
+}
+
+.storybook-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.back-btn-story {
+  background: rgba(255, 255, 255, 0.9);
+  color: #8B5CF6;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.back-btn-story:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.storybook-title {
+  font-size: 2.5rem;
+  color: #7C3AED;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Main Container */
+.storybook-container {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Story List */
+.story-list {
+  background: white;
+  border-radius: 25px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.story-list h2 {
+  color: #8B5CF6;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+}
+
+.story-card {
+  background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+}
+
+.story-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+}
+
+.story-card.selected {
+  border-color: #8B5CF6;
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+}
+
+.story-emoji {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.story-info h3 {
+  color: #7C3AED;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+}
+
+.story-info p {
+  color: #666;
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+}
+
+.story-progress-bar {
+  background: rgba(139, 92, 246, 0.2);
+  height: 8px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.story-progress-fill {
+  background: linear-gradient(90deg, #8B5CF6 0%, #A78BFA 100%);
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.story-progress-text {
+  font-size: 0.85rem;
+  color: #8B5CF6;
+  font-weight: 600;
+}
+
+/* Story Reader */
+.story-reader {
+  background: white;
+  border-radius: 25px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.no-story-selected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 400px;
+}
+
+.select-prompt {
+  font-size: 1.5rem;
+  color: #A78BFA;
+  font-weight: 600;
+}
+
+.story-header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #F3E8FF;
+}
+
+.story-header-info h2 {
+  color: #7C3AED;
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.page-indicator {
+  background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* Story Content */
+.story-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.story-text-card {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FED7AA 100%);
+  border-radius: 20px;
+  padding: 3rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-text {
+  font-size: 1.8rem;
+  line-height: 2.2;
+  color: #333;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Story Controls */
+.story-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.story-btn {
+  padding: 1.2rem 2.5rem;
+  border: none;
+  border-radius: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.listen-btn {
+  background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+  color: white;
+}
+
+.listen-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.listen-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.read-btn {
+  background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+  color: white;
+}
+
+.read-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.read-feedback {
+  background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  animation: feedbackAppear 0.3s ease;
+}
+
+@keyframes feedbackAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Story Navigation */
+.story-navigation {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.nav-btn {
+  flex: 1;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.nav-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .storybook-container {
+    grid-template-columns: 1fr;
+  }
+
+  .story-list {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 1.5rem;
+  }
+
+  .story-list h2 {
+    display: none;
+  }
+
+  .story-card {
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .storybook-page {
+    padding: 1rem;
+  }
+
+  .storybook-title {
+    font-size: 1.8rem;
+  }
+
+  .story-text {
+    font-size: 1.3rem;
+    line-height: 1.8;
+  }
+
+  .story-controls {
+    flex-direction: column;
+  }
+
+  .story-navigation {
+    flex-direction: column;
+  }
+}

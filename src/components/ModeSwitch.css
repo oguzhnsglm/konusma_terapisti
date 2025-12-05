@@ -1,0 +1,220 @@
+/* Mode Switch Container */
+.mode-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.mode-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+}
+
+.lock-icon {
+  font-size: 1rem;
+  margin-left: 0.2rem;
+}
+
+/* Toggle Switch */
+.mode-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+  cursor: pointer;
+}
+
+.mode-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mode-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.mode-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.mode-switch input:checked + .mode-slider {
+  background: #4ade80;
+}
+
+.mode-switch input:checked + .mode-slider:before {
+  transform: translateX(24px);
+}
+
+/* PIN Modal */
+.pin-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.pin-modal {
+  background: white;
+  border-radius: 25px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pin-modal h3 {
+  margin: 0 0 1rem 0;
+  color: #667eea;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.pin-modal p {
+  color: #666;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.pin-input {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 2rem;
+  text-align: center;
+  border: 3px solid #e0e7ff;
+  border-radius: 15px;
+  margin-bottom: 1rem;
+  letter-spacing: 1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.pin-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.pin-error {
+  color: #ef4444;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.pin-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.pin-cancel,
+.pin-submit {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pin-cancel {
+  background: #e5e7eb;
+  color: #666;
+}
+
+.pin-cancel:hover {
+  background: #d1d5db;
+}
+
+.pin-submit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.pin-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mode-switch-container {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .mode-label {
+    font-size: 0.8rem;
+  }
+
+  .mode-switch {
+    width: 45px;
+    height: 24px;
+  }
+
+  .mode-slider:before {
+    height: 18px;
+    width: 18px;
+  }
+
+  .mode-switch input:checked + .mode-slider:before {
+    transform: translateX(21px);
+  }
+}

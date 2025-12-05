@@ -1,0 +1,598 @@
+.progress-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+}
+
+.progress-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.progress-title {
+  font-size: 3rem;
+  color: white;
+  text-align: center;
+  margin: 2rem 0 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.progress-subtitle {
+  font-size: 1.3rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+/* Daily Quests Section */
+.daily-quests-section {
+  background: white;
+  border-radius: 25px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.quests-title {
+  font-size: 1.8rem;
+  color: #667eea;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.quests-subtitle {
+  font-size: 1rem;
+  color: #999;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.quests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.quest-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.quest-card.completed {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  opacity: 0.8;
+}
+
+.quest-checkbox {
+  font-size: 2rem;
+  min-width: 40px;
+}
+
+.quest-info {
+  flex: 1;
+}
+
+.quest-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #764ba2;
+  margin: 0 0 0.3rem 0;
+}
+
+.quest-card.completed .quest-title {
+  color: white;
+}
+
+.quest-description {
+  font-size: 0.95rem;
+  color: #999;
+  margin: 0;
+}
+
+.quest-card.completed .quest-description {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.quest-complete-btn {
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.quest-complete-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.quests-celebration {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border-radius: 20px;
+  animation: pulse 1.5s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Badges Section */
+.badges-section {
+  background: white;
+  border-radius: 25px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.badges-title {
+  font-size: 1.8rem;
+  color: #667eea;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.badges-subtitle {
+  font-size: 1rem;
+  color: #999;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.badge-card {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  border-radius: 20px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.badge-card.locked {
+  background: #e0e0e0;
+  opacity: 0.6;
+}
+
+.badge-card.unlocked {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  animation: unlockPulse 2s ease;
+}
+
+@keyframes unlockPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.badge-card:hover {
+  transform: translateY(-5px);
+}
+
+.badge-icon {
+  font-size: 3rem;
+  margin-bottom: 0.8rem;
+}
+
+.badge-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #764ba2;
+  margin: 0 0 0.5rem 0;
+}
+
+.badge-card.locked .badge-title {
+  color: #999;
+}
+
+.badge-card.unlocked .badge-title {
+  color: white;
+}
+
+.badge-description {
+  font-size: 0.9rem;
+  color: #999;
+  margin: 0;
+}
+
+.badge-card.unlocked .badge-description {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.badge-unlocked-label {
+  margin-top: 0.8rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: white;
+}
+
+/* Weekly Summary */
+.weekly-summary {
+  background: white;
+  border-radius: 25px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.summary-title {
+  font-size: 1.8rem;
+  color: #667eea;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+}
+
+.summary-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 1.5rem;
+  text-align: center;
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-5px);
+}
+
+.summary-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.summary-label {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* Progress Chart */
+.progress-chart {
+  background: white;
+  border-radius: 25px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.chart-title {
+  font-size: 1.8rem;
+  color: #667eea;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.chart-section {
+  margin-bottom: 3rem;
+}
+
+.chart-subtitle {
+  font-size: 1.3rem;
+  color: #764ba2;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.chart-bars {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  height: 200px;
+  align-items: flex-end;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(102, 126, 234, 0.05), transparent);
+  border-radius: 15px;
+}
+
+.chart-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.bar-container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.bar {
+  width: 80%;
+  border-radius: 10px 10px 0 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 0.3rem;
+  position: relative;
+}
+
+.bar-minutes {
+  background: linear-gradient(to top, #667eea, #764ba2);
+}
+
+.bar-words {
+  background: linear-gradient(to top, #f093fb, #f5576c);
+}
+
+.bar:hover {
+  opacity: 0.8;
+  transform: scaleY(1.05);
+}
+
+.bar-value {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.day-label {
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.day-name {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.day-date {
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 0.2rem;
+}
+
+/* Sessions Grid */
+.sessions-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.session-day {
+  text-align: center;
+}
+
+.session-count {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  margin: 0 auto 0.5rem;
+  box-shadow: 0 4px 10px rgba(67, 233, 123, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.session-count:hover {
+  transform: scale(1.1);
+}
+
+/* Add Practice Form */
+.add-practice-form {
+  background: white;
+  border-radius: 25px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.form-title {
+  font-size: 1.8rem;
+  color: #667eea;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+  font-size: 1.1rem;
+  color: #999;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.success-message {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+  padding: 1rem;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 1.1rem;
+  color: #667eea;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 1.2rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.submit-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.submit-btn:active {
+  transform: translateY(-1px);
+}
+
+/* Motivation Box */
+.motivation-box {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  border-radius: 20px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.motivation-text {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #764ba2;
+  margin: 0;
+}
+
+/* Back Button */
+.back-home-btn {
+  padding: 0.8rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.back-home-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-3px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .progress-container {
+    padding: 1rem;
+  }
+
+  .progress-title {
+    font-size: 2rem;
+  }
+
+  .progress-subtitle {
+    font-size: 1rem;
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-bars {
+    height: 150px;
+    gap: 0.3rem;
+  }
+
+  .bar-value {
+    font-size: 0.75rem;
+  }
+
+  .day-name {
+    font-size: 0.8rem;
+  }
+
+  .day-date {
+    font-size: 0.7rem;
+  }
+
+  .session-count {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .form-title,
+  .chart-title,
+  .summary-title {
+    font-size: 1.5rem;
+  }
+}
