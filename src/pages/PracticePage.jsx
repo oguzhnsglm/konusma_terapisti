@@ -156,11 +156,11 @@ const PracticePage = () => {
           ← Geri
         </button>
         <div className="session-info">
-          <div className="timer">
-            ⏱️ {Math.floor((Date.now() - sessionStats.startTime) / 60000)} dk
+          <div className="timer status-pill">
+            Süre: {Math.floor((Date.now() - sessionStats.startTime) / 60000)} dk
           </div>
-          <div className="score">
-            🏆 {completedSections.length}/{practiceWords.length}
+          <div className="score status-pill">
+            İlerleme: {completedSections.length}/{practiceWords.length}
           </div>
         </div>
       </div>
@@ -185,7 +185,7 @@ const PracticePage = () => {
           </div>
 
           <div className="category-tag">
-            📚 {currentWord.category}
+            Kategori: {currentWord.category}
           </div>
 
           <div className="word-display">
@@ -193,21 +193,21 @@ const PracticePage = () => {
           </div>
 
           <div className="tip-box">
-            <span className="tip-icon">💡</span>
+            <span className="tip-icon" aria-hidden="true"></span>
             <p className="tip-text">{currentWord.tip}</p>
           </div>
 
           {/* Feedback Mesajları */}
           {feedback === 'success' && (
             <div className="feedback-message success">
-              <span className="feedback-icon">🎉</span>
+              <span className="feedback-icon" aria-hidden="true"></span>
               <span>Harika! Doğru söyledin!</span>
             </div>
           )}
 
           {feedback === 'listening' && (
             <div className="feedback-message listening">
-              <span className="pulse-animation">🎤</span>
+              <span className="pulse-animation mic-dot" aria-hidden="true"></span>
               <span>Dinliyorum... Kelimeyi söyle!</span>
             </div>
           )}
@@ -220,7 +220,7 @@ const PracticePage = () => {
                 onClick={handleStartPractice}
                 disabled={!isSupported}
               >
-                <span className="mic-icon-large">🎤</span>
+                  <span className="mic-icon-large" aria-hidden="true"></span>
                 <span>Mikrofona Söyle</span>
               </button>
             ) : (
@@ -232,7 +232,7 @@ const PracticePage = () => {
                   setFeedback('');
                 }}
               >
-                <span className="mic-icon-large pulse-animation">⏹️</span>
+                <span className="mic-icon-large pulse-animation" aria-hidden="true"></span>
                 <span>Dur</span>
               </button>
             )}
@@ -240,7 +240,7 @@ const PracticePage = () => {
 
           {!isSupported && (
             <div className="browser-warning">
-              ⚠️ Chrome veya Edge kullanın
+              Tarayıcı desteği için Chrome veya Edge kullanın
             </div>
           )}
 
@@ -266,7 +266,7 @@ const PracticePage = () => {
         {transcript && (
           <div className="transcript-box-modern">
             <div className="transcript-header">
-              <span>🗣️ Söyledikleriniz:</span>
+              <span>Söyledikleriniz:</span>
               <button className="clear-btn-mini" onClick={resetTranscript}>✕</button>
             </div>
             <p className="transcript-content">{transcript}</p>
@@ -297,15 +297,15 @@ const PracticePage = () => {
       {completedSections.length === practiceWords.length && (
         <div className="celebration-modal">
           <div className="celebration-content">
-            <h2>🎊 Tebrikler!</h2>
+            <h2>Tebrikler!</h2>
             <p>Tüm bölümleri tamamladın!</p>
             <div className="celebration-stats">
               <div className="stat">
-                <span className="stat-icon">⏱️</span>
+                <span className="stat-icon" aria-hidden="true"></span>
                 <span>{Math.floor((Date.now() - sessionStats.startTime) / 60000)} dakika</span>
               </div>
               <div className="stat">
-                <span className="stat-icon">🎯</span>
+                <span className="stat-icon" aria-hidden="true"></span>
                 <span>{practiceWords.length} kelime</span>
               </div>
             </div>
@@ -322,7 +322,7 @@ const PracticePage = () => {
                 saveProgress([], 0);
               }}
             >
-              🔄 Yeniden Başla
+              Yeniden Başla
             </button>
           </div>
         </div>

@@ -51,6 +51,9 @@ export const MascotProvider = ({ children }) => {
   const [message, setMessage] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [isCelebrating, setIsCelebrating] = useState(false);
+  const [position, setPosition] = useState('bottom-right');
+
+  const positions = ['center', 'top-center', 'bottom-right', 'bottom-left', 'top-right'];
 
   useEffect(() => {
     // Listen for mascot celebration events from anywhere in the app
@@ -71,25 +74,34 @@ export const MascotProvider = ({ children }) => {
     const messages = praiseMessages[eventType] || praiseMessages.default;
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
     
+    // Get random position
+    const randomPosition = positions[Math.floor(Math.random() * positions.length)];
+    
     setMessage(randomMessage);
+    setPosition(randomPosition);
     setIsVisible(true);
     setIsCelebrating(true);
 
-    // Hide message after 2 seconds
+    // Hide message after 2.5 seconds
     setTimeout(() => {
       setIsVisible(false);
-    }, 2000);
+    }, 2500);
 
-    // Remove celebration animation after animation completes
+    // Remove celebration animation and reset position after animation completes
     setTimeout(() => {
       setIsCelebrating(false);
-    }, 600);
+      // Return to bottom-right after celebration
+      setTimeout(() => {
+        setPosition('bottom-right');
+      }, 300);
+    }, 800);
   }, []);
 
   const value = {
     message,
     isVisible,
     isCelebrating,
+    position,
     celebrate
   };
 

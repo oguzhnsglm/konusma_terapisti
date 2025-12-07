@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProgress } from '../context/ProgressContext';
+import { useMascot } from '../context/MascotContext';
 import './CountingGamePage.css';
 
 const CountingGamePage = () => {
   const navigate = useNavigate();
   const { incrementGames } = useProgress();
+  const { celebrate } = useMascot();
   const [currentLevel, setCurrentLevel] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -47,6 +49,7 @@ const CountingGamePage = () => {
 
     if (answer === currentQuestion.count) {
       setScore(score + 1);
+      celebrate('correctAnswer');
     }
   };
 

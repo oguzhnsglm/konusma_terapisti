@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ProgressProvider } from './context/ProgressContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { MascotProvider } from './context/MascotContext';
+import { AudioProvider } from './context/AudioContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Mascot from './components/Mascot';
 import HomePage from './pages/HomePage';
@@ -34,9 +35,10 @@ function App() {
       <AuthProvider>
         <ProgressProvider>
           <MascotProvider>
-            <BrowserRouter>
-              <Mascot />
-              <Routes>
+            <AudioProvider>
+              <BrowserRouter>
+                <Mascot />
+                <Routes>
                 <Route path="/" element={<HomePageModern />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
@@ -75,6 +77,7 @@ function App() {
               <Route path="/settings" element={<SettingsPage />} />
             </Routes>
           </BrowserRouter>
+          </AudioProvider>
           </MascotProvider>
         </ProgressProvider>
       </AuthProvider>

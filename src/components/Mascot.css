@@ -1,17 +1,48 @@
-/* Mascot Wrapper - Fixed Position */
+/* Mascot Wrapper - Dynamic Positioning */
 .mascot-wrapper {
   position: fixed;
+  z-index: 300;
+  pointer-events: none;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Position variants */
+.mascot-wrapper.bottom-right {
   bottom: 30px;
   right: 30px;
-  z-index: 9999;
-  pointer-events: none;
+}
+
+.mascot-wrapper.bottom-left {
+  bottom: 30px;
+  left: 30px;
+}
+
+.mascot-wrapper.top-right {
+  top: 100px;
+  right: 30px;
+}
+
+.mascot-wrapper.top-center {
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.mascot-wrapper.center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Mascot Character */
 .mascot-character {
   animation: mascot-idle 3s ease-in-out infinite;
-  filter: drop-shadow(0 4px 12px rgba(167, 139, 250, 0.4));
-  transition: transform 0.3s ease;
+  filter: drop-shadow(0 8px 20px rgba(167, 139, 250, 0.6));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.mascot-character:hover {
+  filter: drop-shadow(0 12px 30px rgba(167, 139, 250, 0.8));
 }
 
 /* Idle Animation - Gentle Float */
@@ -83,27 +114,62 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+  }
+}
+
+/* Sparkle Animation */
+.sparkle {
+  animation: sparkle-twinkle 2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.sparkle-1 {
+  animation-delay: 0s;
+}
+
+.sparkle-2 {
+  animation-delay: 0.5s;
+}
+
+@keyframes sparkle-twinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
   }
 }
 
 /* Celebration Animation */
 .mascot-character.celebrating {
-  animation: mascot-celebrate 0.6s ease-in-out;
+  animation: mascot-celebrate 0.8s ease-in-out;
+  filter: drop-shadow(0 15px 40px rgba(244, 114, 182, 0.9));
 }
 
 @keyframes mascot-celebrate {
   0% {
     transform: scale(1) rotate(0deg);
   }
-  25% {
-    transform: scale(1.15) rotate(-5deg);
+  15% {
+    transform: scale(1.3) rotate(-8deg);
   }
-  50% {
-    transform: scale(1.1) rotate(5deg);
+  30% {
+    transform: scale(1.25) rotate(8deg);
+  }
+  45% {
+    transform: scale(1.35) rotate(-6deg);
+  }
+  60% {
+    transform: scale(1.3) rotate(6deg);
   }
   75% {
-    transform: scale(1.15) rotate(-3deg);
+    transform: scale(1.25) rotate(-4deg);
+  }
+  90% {
+    transform: scale(1.2) rotate(2deg);
   }
   100% {
     transform: scale(1) rotate(0deg);
@@ -113,41 +179,47 @@
 /* Speech Bubble */
 .mascot-bubble {
   position: absolute;
-  bottom: 85px;
+  bottom: 130px;
   right: 0;
-  background: linear-gradient(135deg, #818CF8 0%, #A78BFA 100%);
+  background: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #F472B6 100%);
   color: white;
-  padding: 0.8rem 1.3rem;
-  border-radius: 18px;
-  font-size: 1rem;
-  font-weight: bold;
+  padding: 1rem 1.6rem;
+  border-radius: 20px;
+  font-size: 1.3rem;
+  font-weight: 800;
   white-space: nowrap;
-  box-shadow: 0 6px 20px rgba(129, 140, 248, 0.5);
-  animation: bubble-appear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 10px 30px rgba(129, 140, 248, 0.7);
+  animation: bubble-appear 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   pointer-events: none;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Speech Bubble Tail */
 .mascot-bubble::after {
   content: '';
   position: absolute;
-  bottom: -8px;
-  right: 25px;
+  bottom: -12px;
+  right: 30px;
   width: 0;
   height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid #A78BFA;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 14px solid #F472B6;
+  filter: drop-shadow(0 4px 8px rgba(129, 140, 248, 0.4));
 }
 
 @keyframes bubble-appear {
-  from {
+  0% {
     opacity: 0;
-    transform: translateY(10px) scale(0.8);
+    transform: translateY(20px) scale(0.6) rotate(-5deg);
   }
-  to {
+  60% {
+    transform: translateY(-5px) scale(1.1) rotate(2deg);
+  }
+  100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0) scale(1) rotate(0);
   }
 }
 
@@ -157,19 +229,19 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   pointer-events: none;
 }
 
 /* Individual Confetti Particles */
 .confetti {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   opacity: 0;
-  animation: confetti-burst 0.8s ease-out forwards;
+  animation: confetti-burst 1s ease-out forwards;
 }
 
 .confetti-1 {
@@ -207,25 +279,49 @@
   animation-delay: 0.08s;
 }
 
+.confetti-6 {
+  background: #F472B6;
+  left: 50%;
+  top: 50%;
+  animation-delay: 0.12s;
+}
+
+.confetti-7 {
+  background: #FB923C;
+  left: 50%;
+  top: 50%;
+  animation-delay: 0.06s;
+}
+
+.confetti-8 {
+  background: #C084FC;
+  left: 50%;
+  top: 50%;
+  animation-delay: 0.14s;
+}
+
 @keyframes confetti-burst {
   0% {
     opacity: 1;
-    transform: translate(0, 0) scale(0);
+    transform: translate(0, 0) scale(0) rotate(0deg);
   }
   50% {
     opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: translate(var(--tx, 0), var(--ty, -40px)) scale(1);
+    transform: translate(var(--tx, 0), var(--ty, -50px)) scale(1.2) rotate(360deg);
   }
 }
 
-.confetti-1 { --tx: -30px; --ty: -35px; }
-.confetti-2 { --tx: 30px; --ty: -40px; }
-.confetti-3 { --tx: -25px; --ty: -30px; }
-.confetti-4 { --tx: 25px; --ty: -35px; }
-.confetti-5 { --tx: 0px; --ty: -45px; }
+.confetti-1 { --tx: -45px; --ty: -50px; }
+.confetti-2 { --tx: 45px; --ty: -55px; }
+.confetti-3 { --tx: -40px; --ty: -45px; }
+.confetti-4 { --tx: 40px; --ty: -50px; }
+.confetti-5 { --tx: 0px; --ty: -60px; }
+.confetti-6 { --tx: -30px; --ty: -52px; }
+.confetti-7 { --tx: 30px; --ty: -48px; }
+.confetti-8 { --tx: 0px; --ty: -45px; }
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -234,15 +330,28 @@
     right: 20px;
   }
 
+  .mascot-wrapper.center {
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+
+  .mascot-wrapper.top-center {
+    transform: translateX(-50%) scale(0.9);
+  }
+
   .mascot-character svg {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
   }
 
   .mascot-bubble {
-    font-size: 0.9rem;
-    padding: 0.7rem 1.1rem;
-    bottom: 75px;
+    font-size: 1.1rem;
+    padding: 0.8rem 1.3rem;
+    bottom: 110px;
+  }
+
+  .confetti-container {
+    width: 120px;
+    height: 120px;
   }
 }
 

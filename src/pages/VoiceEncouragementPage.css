@@ -283,7 +283,8 @@
   align-items: center;
   gap: 1rem;
   animation: slideUp 0.3s ease;
-  z-index: 100;
+  z-index: 350;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
 .playing-icon {

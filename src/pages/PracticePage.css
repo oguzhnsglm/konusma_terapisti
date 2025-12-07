@@ -1,4 +1,5 @@
 /* Modern Practice Page */
+/* Modern Practice Page */
 .practice-page-modern {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -6,6 +7,204 @@
   animation: fadeIn 0.5s ease;
 }
 
+/* Spotify-inspired overrides */
+.practice-page-modern {
+  background: var(--app-bg-gradient);
+  color: var(--text-primary);
+  padding: 32px 24px 56px;
+}
+
+.practice-header {
+  align-items: flex-start;
+}
+
+.back-btn-modern {
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+  font-weight: 700;
+  padding: 10px 18px;
+}
+
+.session-info {
+  gap: 12px;
+}
+
+.status-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 700;
+}
+
+.progress-bar-container {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #1ed760 0%, #1fdf64 100%);
+  box-shadow: 0 0 20px rgba(30, 215, 96, 0.45);
+}
+
+.practice-container {
+  max-width: 1100px;
+}
+
+.word-card-main,
+.transcript-box-modern,
+.celebration-content {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+}
+
+.word-display {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.main-word {
+  letter-spacing: 0.35rem;
+}
+
+.tip-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+}
+
+.tip-icon,
+.feedback-icon,
+.mic-icon-large,
+.mic-dot,
+.stat-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1ed760, #1fdf64);
+}
+
+.mic-dot,
+.mic-icon-large {
+  width: 20px;
+  height: 20px;
+}
+
+.feedback-message.success {
+  background: rgba(30, 215, 96, 0.12);
+  border: 1px solid rgba(30, 215, 96, 0.4);
+  color: #c8ffd8;
+}
+
+.feedback-message.listening {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  color: #cfe4ff;
+}
+
+.mic-btn-large {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-primary);
+  padding: 14px 22px;
+  gap: 10px;
+}
+
+.mic-btn-large.listening {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.navigation-controls {
+  gap: 12px;
+}
+
+.nav-btn {
+  border-radius: 999px;
+  padding: 10px 18px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+
+.transcript-box-modern {
+  border-radius: var(--radius-md);
+}
+
+.transcript-header {
+  color: var(--text-secondary);
+}
+
+.words-grid-mini {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.word-mini {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  color: var(--text-primary);
+}
+
+.word-mini.active {
+  border-color: rgba(30, 215, 96, 0.6);
+  background: rgba(30, 215, 96, 0.08);
+}
+
+.word-mini.completed .check {
+  color: var(--accent);
+}
+
+.celebration-modal {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.celebration-content h2 {
+  color: var(--text-primary);
+}
+
+.celebration-stats .stat-icon {
+  background: linear-gradient(135deg, #1ed760, #1fdf64);
+  min-width: 18px;
+  min-height: 18px;
+}
+
+.restart-btn {
+  background: var(--accent);
+  color: #000;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.restart-btn:hover {
+  background: var(--accent-strong);
+}
+
+@media (max-width: 768px) {
+  .practice-page-modern {
+    padding: 20px 16px 40px;
+  }
+
+  .main-word {
+    font-size: 3rem;
+    letter-spacing: 0.2rem;
+  }
+
+  .session-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -20,7 +219,7 @@
 }
 
 .back-btn-modern {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   color: white;
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -30,11 +229,14 @@
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 10;
 }
 
 .back-btn-modern:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
   transform: translateX(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 .session-info {
@@ -475,7 +677,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 600;
   animation: fadeIn 0.3s ease;
 }
 

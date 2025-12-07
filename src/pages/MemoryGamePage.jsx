@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProgress } from '../context/ProgressContext';
+import { useMascot } from '../context/MascotContext';
 import './MemoryGamePage.css';
 
 const MemoryGamePage = () => {
   const navigate = useNavigate();
   const { incrementGames } = useProgress();
+  const { celebrate } = useMascot();
   const [flipped, setFlipped] = useState([]);
   const [solved, setSolved] = useState([]);
   const [moves, setMoves] = useState(0);
@@ -41,9 +43,13 @@ const MemoryGamePage = () => {
         setSolved([...solved, first, second]);
         setFlipped([]);
         
+        // Celebrate match
+        celebrate('correctAnswer');
+        
         if (solved.length + 2 === cards.length) {
           setTimeout(() => {
             incrementGames();
+            celebrate('questCompleted');
             alert(`🎉 Tebrikler! ${moves + 1} hamlede tamamladın!`);
           }, 500);
         }

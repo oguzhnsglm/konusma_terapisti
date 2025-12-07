@@ -11,10 +11,15 @@ const DashboardPage = () => {
   const handleLogout = async () => {
     try {
       await signOut();
-      navigate('/');
+      // Ensure immediate navigation
+      setTimeout(() => {
+        navigate('/', { replace: true });
+      }, 100);
     } catch (error) {
       console.error('Logout error:', error);
       alert('Çıkış yapılırken bir hata oluştu.');
+      // Navigate anyway even if logout fails
+      navigate('/', { replace: true });
     }
   };
 

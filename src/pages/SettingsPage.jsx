@@ -1,11 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useAudio } from '../context/AudioContext';
 import './SettingsPage.css';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
   const { theme, language, toggleTheme, changeLanguage, isDark } = useTheme();
+  const { 
+    isMusicEnabled, 
+    toggleMusicEnabled, 
+    musicVolume, 
+    setMusicVolume,
+    isSfxEnabled,
+    toggleSfxEnabled,
+    sfxVolume,
+    setSfxVolume,
+    playSfx
+  } = useAudio();
   const [settings, setSettings] = useState({
     soundEnabled: true,
     voiceSpeed: 'normal',
@@ -38,6 +50,12 @@ const SettingsPage = () => {
     tr: {
       title: '⚙️ Ayarlar',
       sound: 'Ses Ayarları',
+      backgroundMusic: 'Arka Plan Müziği',
+      backgroundMusicDesc: 'Spotify tarzı müzik çalar',
+      musicVolume: 'Müzik Ses Seviyesi',
+      soundEffects: 'Ses Efektleri',
+      soundEffectsDesc: 'Buton ve oyun sesleri',
+      sfxVolume: 'Efekt Ses Seviyesi',
       soundToggle: 'Sesler',
       soundDesc: 'Oyun seslerini aç/kapat',
       voiceSpeed: 'Ses Hızı',
@@ -70,6 +88,12 @@ const SettingsPage = () => {
     en: {
       title: '⚙️ Settings',
       sound: 'Sound Settings',
+      backgroundMusic: 'Background Music',
+      backgroundMusicDesc: 'Spotify-style music player',
+      musicVolume: 'Music Volume',
+      soundEffects: 'Sound Effects',
+      soundEffectsDesc: 'Button and game sounds',
+      sfxVolume: 'Effects Volume',
       soundToggle: 'Sounds',
       soundDesc: 'Turn game sounds on/off',
       voiceSpeed: 'Voice Speed',
@@ -121,6 +145,76 @@ const SettingsPage = () => {
           <div className="setting-section">
             <h2 className="section-heading">🔊 {t.sound}</h2>
             
+            <div className="setting-item">
+              <div className="setting-info">
+                <span className="setting-label">{t.backgroundMusic}</span>
+                <span className="setting-desc">{t.backgroundMusicDesc}</span>
+              </div>
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={isMusicEnabled}
+                  onChange={(e) => toggleMusicEnabled(e.target.checked)}
+                />
+                <span className="toggle-slider"></span>
+              </label>
+            </div>
+
+            {isMusicEnabled && (
+              <div className="setting-item slider-item">
+                <div className="setting-info">
+                  <span className="setting-label">{t.musicVolume}</span>
+                  <span className="setting-value">{Math.round(musicVolume * 100)}%</span>
+                </div>
+                <input
+                  type="range"
+                  className="volume-slider-setting"
+                  min="0"
+                  max="100"
+                  value={musicVolume * 100}
+                  onChange={(e) => setMusicVolume(e.target.value / 100)}
+                />
+              </div>
+            )}
+
+            <div className="setting-item">
+              <div className="setting-info">
+                <span className="setting-label">{t.soundEffects}</span>
+                <span className="setting-desc">{t.soundEffectsDesc}</span>
+              </div>
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={isSfxEnabled}
+                  onChange={(e) => {
+                    toggleSfxEnabled(e.target.checked);
+                    if (e.target.checked) playSfx('click');
+                  }}
+                />
+                <span className="toggle-slider"></span>
+              </label>
+            </div>
+
+            {isSfxEnabled && (
+              <div className="setting-item slider-item">
+                <div className="setting-info">
+                  <span className="setting-label">{t.sfxVolume}</span>
+                  <span className="setting-value">{Math.round(sfxVolume * 100)}%</span>
+                </div>
+                <input
+                  type="range"
+                  className="volume-slider-setting"
+                  min="0"
+                  max="100"
+                  value={sfxVolume * 100}
+                  onChange={(e) => {
+                    setSfxVolume(e.target.value / 100);
+                    playSfx('click');
+                  }}
+                />
+              </div>
+            )}
+
             <div className="setting-item">
               <div className="setting-info">
                 <span className="setting-label">{t.soundToggle}</span>
