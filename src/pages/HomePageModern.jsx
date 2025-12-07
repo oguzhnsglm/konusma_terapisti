@@ -164,6 +164,9 @@ const HomePageModern = () => {
           <button className="header-btn" onClick={() => navigate('/settings')}>
             ⚙️
           </button>
+          <button className="header-btn" onClick={() => navigate('/register')}>
+            ✨ {t.register}
+          </button>
           <button className="header-btn primary" onClick={() => navigate('/login')}>
             {t.login}
           </button>
@@ -214,16 +217,6 @@ const HomePageModern = () => {
                 </div>
               ))}
             </div>
-          </section>
-
-          {/* Bottom Actions */}
-          <section className="bottom-actions">
-            <button
-              className="action-btn secondary"
-              onClick={() => navigate('/register')}
-            >
-              ✨ {t.register}
-            </button>
           </section>
         </div>
       </main>
