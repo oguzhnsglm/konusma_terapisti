@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Konusma Terapisi",
+    "slug": "konusma-terapisi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "jsEngine": "hermes",
+    "assetBundlePatterns": ["**/*"],
+    "android": {
+      "permissions": ["RECORD_AUDIO"]
+    }
+  }
+}
