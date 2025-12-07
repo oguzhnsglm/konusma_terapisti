@@ -1,0 +1,363 @@
+/* Voice Encouragement Page Styles */
+.voice-encouragement-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  padding: 2rem;
+  position: relative;
+}
+
+.back-btn {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.voice-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-top: 3rem;
+  text-align: center;
+}
+
+.voice-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.voice-subtitle {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 3rem;
+}
+
+.voice-description {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 2rem 0;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+/* Settings Panel */
+.settings-panel {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Toggle Section */
+.toggle-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.toggle-label {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.toggle-btn {
+  position: relative;
+  width: 140px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+}
+
+.toggle-btn.enabled {
+  background: rgba(72, 187, 120, 0.8);
+  border-color: rgba(72, 187, 120, 1);
+}
+
+.toggle-btn.disabled {
+  background: rgba(245, 101, 101, 0.6);
+  border-color: rgba(245, 101, 101, 0.8);
+}
+
+.toggle-slider {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: all 0.25s ease;
+  left: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-btn.enabled .toggle-slider {
+  left: calc(100% - 45px);
+}
+
+.toggle-text {
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: center;
+}
+
+/* Style Section */
+.style-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.style-label {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.style-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.style-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.style-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.style-btn.active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #f5576c;
+  border-color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* Test Section */
+.test-section {
+  margin-top: 3rem;
+}
+
+.test-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 2rem;
+}
+
+.messages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.message-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.25s ease;
+}
+
+.message-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.message-icon {
+  font-size: 2.5rem;
+}
+
+.message-text {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #333;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f5576c;
+  background: #ffffff;
+  border: 2px solid #f5576c;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.play-btn:hover:not(:disabled) {
+  background: #f5576c;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.play-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Test All Button */
+.test-all-btn {
+  padding: 1.25rem 3rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f5576c;
+  background: #ffffff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  margin-top: 1rem;
+}
+
+.test-all-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.test-all-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Playing Display */
+.playing-display {
+  position: fixed;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 1.5rem 3rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: slideUp 0.3s ease;
+  z-index: 100;
+}
+
+.playing-icon {
+  font-size: 2rem;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.playing-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .voice-encouragement-page {
+    padding: 1rem;
+  }
+
+  .back-btn {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .voice-title {
+    font-size: 2rem;
+  }
+
+  .voice-subtitle {
+    font-size: 1rem;
+  }
+
+  .toggle-section {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .messages-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .test-all-btn {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+  }
+
+  .playing-display {
+    bottom: 1rem;
+    padding: 1rem 2rem;
+  }
+
+  .playing-text {
+    font-size: 1.25rem;
+  }
+}

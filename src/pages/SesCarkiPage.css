@@ -1,0 +1,256 @@
+/* Ses Çarkı Page Styles */
+.ses-carki-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  padding: 2rem;
+  position: relative;
+}
+
+.back-btn {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.game-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 3rem;
+}
+
+.game-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.game-description {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 3rem;
+}
+
+/* Wheel */
+.wheel-container {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  margin: 2rem auto;
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3rem;
+  z-index: 10;
+  color: #ffffff;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.wheel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  overflow: hidden;
+}
+
+.wheel.spinning {
+  transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+}
+
+.wheel-segment {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  top: 50%;
+  left: 50%;
+  transform-origin: 0% 0%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.wheel-segment:nth-child(1) { background: #FF6B6B; }
+.wheel-segment:nth-child(2) { background: #4ECDC4; }
+.wheel-segment:nth-child(3) { background: #45B7D1; }
+.wheel-segment:nth-child(4) { background: #FFA07A; }
+.wheel-segment:nth-child(5) { background: #98D8C8; }
+.wheel-segment:nth-child(6) { background: #F7DC6F; }
+.wheel-segment:nth-child(7) { background: #BB8FCE; }
+.wheel-segment:nth-child(8) { background: #85C1E2; }
+
+.segment-letter {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.wheel-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+/* Spin Button */
+.spin-btn {
+  margin-top: 2rem;
+  padding: 1.25rem 3rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f5576c;
+  background: #ffffff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.spin-btn:hover:not(.disabled) {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  background: #fff5f5;
+}
+
+.spin-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Task Display */
+.task-display {
+  margin-top: 3rem;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 2rem;
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.task-letter {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.task-text {
+  color: #ffffff;
+}
+
+.task-prefix {
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.task-text p {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ses-carki-page {
+    padding: 1rem;
+  }
+
+  .back-btn {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .game-title {
+    font-size: 1.75rem;
+  }
+
+  .game-description {
+    font-size: 1rem;
+  }
+
+  .wheel-container {
+    width: 300px;
+    height: 300px;
+  }
+
+  .wheel-pointer {
+    font-size: 2rem;
+    top: -15px;
+  }
+
+  .segment-letter {
+    font-size: 1.5rem;
+  }
+
+  .wheel-center {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
+
+  .spin-btn {
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+  }
+
+  .task-letter {
+    font-size: 3rem;
+  }
+
+  .task-text p {
+    font-size: 1.25rem;
+  }
+}

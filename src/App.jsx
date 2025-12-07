@@ -6,6 +6,7 @@ import { MascotProvider } from './context/MascotContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Mascot from './components/Mascot';
 import HomePage from './pages/HomePage';
+import HomePageModern from './pages/HomePageModern';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import PracticePage from './pages/PracticePage';
@@ -21,6 +22,11 @@ import SettingsPage from './pages/SettingsPage';
 import ProgressPage from './pages/ProgressPage';
 import StorybookPage from './pages/StorybookPage';
 import WorldMapPage from './pages/WorldMapPage';
+import HarfCanavariBeslemePage from './pages/HarfCanavariBeslemePage';
+import SesCarkiPage from './pages/SesCarkiPage';
+import DuyguEslestirmePage from './pages/DuyguEslestirmePage';
+import ProfileAvatarPage from './pages/ProfileAvatarPage';
+import VoiceEncouragementPage from './pages/VoiceEncouragementPage';
 
 function App() {
   return (
@@ -31,7 +37,7 @@ function App() {
             <BrowserRouter>
               <Mascot />
               <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<HomePageModern />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/practice" element={<PracticePage />} />
@@ -45,6 +51,11 @@ function App() {
               <Route path="/progress" element={<ProgressPage />} />
               <Route path="/storybook" element={<StorybookPage />} />
               <Route path="/world-map" element={<WorldMapPage />} />
+              <Route path="/harf-canavari-besleme" element={<HarfCanavariBeslemePage />} />
+              <Route path="/ses-carki" element={<SesCarkiPage />} />
+              <Route path="/duygu-eslestirme" element={<DuyguEslestirmePage />} />
+              <Route path="/profil-avatar" element={<ProfileAvatarPage />} />
+              <Route path="/sesli-guclendirme" element={<VoiceEncouragementPage />} />
               <Route
                 path="/dashboard"
                 element={
