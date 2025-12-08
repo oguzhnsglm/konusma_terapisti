@@ -221,7 +221,7 @@
 .back-btn-modern {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
-  color: white;
+  color: var(--text-primary);
   border: 2px solid rgba(255, 255, 255, 0.3);
   padding: 1rem 2rem;
   border-radius: 20px;
@@ -278,7 +278,7 @@
 }
 
 .progress-text {
-  color: white;
+  color: var(--text-primary);
   font-weight: bold;
   font-size: 1.1rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -292,7 +292,7 @@
 
 /* Main Word Card */
 .word-card-main {
-  background: white;
+  background: var(--surface);
   border-radius: 30px;
   padding: 3rem;
   margin-bottom: 2rem;
@@ -338,7 +338,7 @@
 .difficulty-badge {
   padding: 0.5rem 1.5rem;
   border-radius: 20px;
-  color: white;
+  color: var(--text-primary);
   font-weight: bold;
   font-size: 1rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -368,7 +368,7 @@
 .main-word {
   font-size: 4rem;
   font-weight: 900;
-  color: white;
+  color: var(--text-primary);
   margin: 0;
   letter-spacing: 0.5rem;
   text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -436,12 +436,12 @@
 
 .feedback-message.success {
   background: linear-gradient(135deg, #4ade80 0%, #3b82f6 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .feedback-message.listening {
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .feedback-icon {
@@ -472,7 +472,7 @@
 
 .mic-btn-large {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: var(--text-primary);
   border: none;
   border-radius: 25px;
   padding: 2rem 4rem;
@@ -540,12 +540,12 @@
 
 .nav-btn.prev {
   background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .nav-btn.skip {
   background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .nav-btn:hover:not(:disabled) {
@@ -581,7 +581,7 @@
 
 .clear-btn-mini {
   background: #ef4444;
-  color: white;
+  color: var(--text-primary);
   border: none;
   border-radius: 50%;
   width: 35px;
@@ -647,7 +647,7 @@
   top: -8px;
   right: -8px;
   background: #4ade80;
-  color: white;
+  color: var(--text-primary);
   width: 25px;
   height: 25px;
   border-radius: 50%;
@@ -682,7 +682,7 @@
 }
 
 .celebration-content {
-  background: white;
+  background: var(--surface);
   border-radius: 30px;
   padding: 3rem;
   text-align: center;
@@ -739,7 +739,7 @@
 
 .restart-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: var(--text-primary);
   border: none;
   border-radius: 20px;
   padding: 1.5rem 3rem;

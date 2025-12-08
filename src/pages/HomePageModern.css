@@ -5,8 +5,8 @@
 
 .modern-home {
   min-height: 100vh;
-  background: linear-gradient(180deg, #121212 0%, #000000 100%);
-  color: #ffffff;
+  background: var(--app-bg-gradient);
+  color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   display: flex;
   overflow-x: hidden;
@@ -15,7 +15,7 @@
 /* Sidebar */
 .sidebar {
   width: 280px;
-  background: #000000;
+  background: var(--surface-strong);
   padding: 24px 12px;
   position: fixed;
   left: 0;
@@ -23,7 +23,7 @@
   bottom: 0;
   z-index: 500;
   overflow-y: auto;
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid var(--border);
 }
 
 .sidebar-content {
@@ -43,7 +43,7 @@
   align-items: center;
   gap: 12px;
   padding: 8px 16px;
-  color: #b3b3b3;
+  color: var(--text-secondary);
   font-size: 0.875rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -66,7 +66,7 @@
   gap: 16px;
   padding: 12px 16px;
   border-radius: 6px;
-  color: #b3b3b3;
+  color: var(--text-secondary);
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
@@ -81,8 +81,8 @@
 }
 
 .sidebar-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-primary);
 }
 
 .sidebar-item:hover svg {
@@ -105,14 +105,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 32px;
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(20px);
+  background: var(--surface);
+  box-shadow: 0 4px 20px var(--shadow-soft);
   position: fixed;
   top: 0;
   left: 280px;
   right: 0;
   z-index: 400;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border);
 }
 
 .header-left {
@@ -156,8 +156,8 @@
   padding: 10px 20px;
   border-radius: 500px;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
   font-size: 0.875rem;
   font-weight: 700;
   cursor: pointer;
@@ -167,8 +167,8 @@
 }
 
 .header-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.06);
+  border-color: var(--border);
   transform: scale(1.04);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
@@ -208,17 +208,17 @@
 
 .greeting-title {
   font-size: 3rem;
-  font-weight: 900;
+  font-weight: 700;
   margin: 0 0 16px 0;
-  color: #ffffff;
-  letter-spacing: -2px;
+  color: var(--text-secondary);
+  letter-spacing: -1px;
   display: flex;
   align-items: center;
 }
 
 .greeting-text {
   font-size: 1rem;
-  color: #b3b3b3;
+  color: var(--text-secondary);
   margin: 0;
   font-weight: 500;
 }
@@ -242,24 +242,25 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  border: 1px solid var(--border);
 }
 
 .activity-card-large::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.12);
   transition: all 0.3s ease;
   z-index: 1;
 }
 
 .activity-card-large:hover {
   transform: scale(1.03);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px var(--shadow-soft);
 }
 
 .activity-card-large:hover::before {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .activity-icon-large {
@@ -287,7 +288,7 @@
 
 .activity-desc {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #f8fafc;
   margin: 0;
   font-weight: 400;
 }
@@ -296,7 +297,7 @@
   position: relative;
   z-index: 2;
   font-size: 2rem;
-  color: #ffffff;
+  color: var(--text-primary);
   opacity: 0;
   transform: translateX(-8px);
   transition: all 0.3s ease;
@@ -316,7 +317,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   margin: 0 0 24px 0;
-  color: #ffffff;
+  color: var(--text-primary);
   text-align: left;
   letter-spacing: -0.5px;
 }
@@ -329,8 +330,8 @@
 }
 
 .activity-card-small {
-  background: #181818;
-  border: none;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 20px;
   cursor: pointer;
@@ -339,9 +340,9 @@
 }
 
 .activity-card-small:hover {
-  background: #282828;
+  background: var(--surface-contrast);
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
+  box-shadow: 0 8px 24px var(--shadow-soft),
               0 0 20px rgba(30, 215, 96, 0.1);
 }
 
@@ -360,13 +361,13 @@
   font-size: 1rem;
   font-weight: 700;
   margin: 0 0 8px 0;
-  color: #ffffff;
+  color: var(--text-primary);
   letter-spacing: 0;
 }
 
 .activity-desc-small {
   font-size: 0.8125rem;
-  color: #b3b3b3;
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.4;
   font-weight: 400;

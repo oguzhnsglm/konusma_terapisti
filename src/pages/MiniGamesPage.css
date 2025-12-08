@@ -13,8 +13,8 @@
 .settings-nav-btn {
   padding: 0.8rem 1.5rem;
   background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 2px solid white;
+  color: var(--text-primary);
+  border: 2px solid var(--border);
   border-radius: 15px;
   font-size: 1rem;
   font-weight: bold;
@@ -34,7 +34,7 @@
 
 .games-title {
   font-size: 3rem;
-  color: white;
+  color: var(--text-primary);
   text-align: center;
   margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
@@ -42,7 +42,7 @@
 
 .games-subtitle {
   font-size: 1.3rem;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--text-secondary);
   text-align: center;
   margin-bottom: 3rem;
 }
@@ -58,7 +58,7 @@
   padding: 2rem;
   font-size: 1.5rem;
   font-weight: 600;
-  color: white;
+  color: var(--text-primary);
   border: none;
   border-radius: 20px;
   cursor: pointer;
@@ -93,14 +93,14 @@
 
 .section-title {
   font-size: 2rem;
-  color: white;
+  color: var(--text-primary);
   text-align: center;
   margin-bottom: 2rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .game-box {
-  background: white;
+  background: var(--surface);
   padding: 3rem;
   border-radius: 30px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -155,13 +155,13 @@
 
 .option-btn.correct {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  color: white;
+  color: var(--text-primary);
   border-color: #43e97b;
 }
 
 .option-btn.incorrect {
   background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  color: white;
+  color: var(--text-primary);
   border-color: #fa709a;
 }
 
@@ -197,7 +197,7 @@
   font-size: 1.2rem;
   font-weight: 600;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: var(--text-primary);
   border: none;
   border-radius: 15px;
   cursor: pointer;

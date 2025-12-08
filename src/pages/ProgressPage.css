@@ -11,7 +11,7 @@
 
 .progress-title {
   font-size: 3rem;
-  color: white;
+  color: var(--text-primary);
   text-align: center;
   margin: 2rem 0 0.5rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
@@ -19,14 +19,14 @@
 
 .progress-subtitle {
   font-size: 1.3rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-secondary);
   text-align: center;
   margin-bottom: 3rem;
 }
 
 /* Daily Quests Section */
 .daily-quests-section {
-  background: white;
+  background: var(--surface);
   border-radius: 25px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -86,7 +86,7 @@
 }
 
 .quest-card.completed .quest-title {
-  color: white;
+  color: var(--text-primary);
 }
 
 .quest-description {
@@ -96,13 +96,13 @@
 }
 
 .quest-card.completed .quest-description {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-secondary);
 }
 
 .quest-complete-btn {
   padding: 0.8rem 1.5rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: var(--text-primary);
   border: none;
   border-radius: 15px;
   font-size: 1rem;
@@ -121,7 +121,7 @@
   margin-top: 1.5rem;
   padding: 1.5rem;
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  color: white;
+  color: var(--text-primary);
   text-align: center;
   font-size: 1.3rem;
   font-weight: bold;
@@ -136,7 +136,7 @@
 
 /* Badges Section */
 .badges-section {
-  background: white;
+  background: var(--surface);
   border-radius: 25px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -209,7 +209,7 @@
 }
 
 .badge-card.unlocked .badge-title {
-  color: white;
+  color: var(--text-primary);
 }
 
 .badge-description {
@@ -219,7 +219,7 @@
 }
 
 .badge-card.unlocked .badge-description {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-secondary);
 }
 
 .badge-unlocked-label {
@@ -229,12 +229,12 @@
   border-radius: 10px;
   font-size: 0.9rem;
   font-weight: bold;
-  color: white;
+  color: var(--text-primary);
 }
 
 /* Weekly Summary */
 .weekly-summary {
-  background: white;
+  background: var(--surface);
   border-radius: 25px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -259,7 +259,7 @@
   border-radius: 20px;
   padding: 1.5rem;
   text-align: center;
-  color: white;
+  color: var(--text-primary);
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
   transition: transform 0.3s ease;
 }
@@ -286,7 +286,7 @@
 
 /* Progress Chart */
 .progress-chart {
-  background: white;
+  background: var(--surface);
   border-radius: 25px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -363,7 +363,7 @@
 }
 
 .bar-value {
-  color: white;
+  color: var(--text-primary);
   font-size: 0.9rem;
   font-weight: bold;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
@@ -408,7 +408,7 @@
   justify-content: center;
   font-size: 1.5rem;
   font-weight: bold;
-  color: white;
+  color: var(--text-primary);
   margin: 0 auto 0.5rem;
   box-shadow: 0 4px 10px rgba(67, 233, 123, 0.3);
   transition: transform 0.3s ease;
@@ -420,7 +420,7 @@
 
 /* Add Practice Form */
 .add-practice-form {
-  background: white;
+  background: var(--surface);
   border-radius: 25px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -443,7 +443,7 @@
 
 .success-message {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  color: white;
+  color: var(--text-primary);
   padding: 1rem;
   border-radius: 15px;
   text-align: center;
@@ -496,7 +496,7 @@
   padding: 1.2rem;
   font-size: 1.3rem;
   font-weight: bold;
-  color: white;
+  color: var(--text-primary);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   border-radius: 15px;
@@ -534,7 +534,7 @@
 .back-home-btn {
   padding: 0.8rem 1.5rem;
   background: rgba(255, 255, 255, 0.15);
-  color: white;
+  color: var(--text-primary);
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 15px;
   font-size: 1rem;

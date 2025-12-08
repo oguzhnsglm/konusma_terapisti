@@ -182,7 +182,7 @@
   bottom: 130px;
   right: 0;
   background: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #F472B6 100%);
-  color: white;
+  color: var(--text-primary);
   padding: 1rem 1.6rem;
   border-radius: 20px;
   font-size: 1.3rem;

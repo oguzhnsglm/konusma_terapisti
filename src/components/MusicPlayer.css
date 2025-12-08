@@ -48,7 +48,7 @@
 .track-name {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0 0 4px 0;
   white-space: nowrap;
   overflow: hidden;
@@ -94,19 +94,19 @@
 }
 
 .control-btn:hover {
-  color: #ffffff;
+  color: var(--text-primary);
   transform: scale(1.1);
 }
 
 .control-btn.play-pause {
   width: 40px;
   height: 40px;
-  background: #ffffff;
+  background: var(--surface);
   color: #000000;
 }
 
 .control-btn.play-pause:hover {
-  background: #ffffff;
+  background: var(--surface);
   transform: scale(1.06);
 }
 
@@ -163,7 +163,7 @@
   transform: translateY(-50%);
   width: 12px;
   height: 12px;
-  background: #ffffff;
+  background: var(--surface);
   border-radius: 50%;
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -193,7 +193,7 @@
 }
 
 .volume-btn:hover {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .volume-btn svg {
@@ -230,7 +230,7 @@
   transform: translateY(-50%);
   width: 12px;
   height: 12px;
-  background: #ffffff;
+  background: var(--surface);
   border-radius: 50%;
   opacity: 0;
   transition: opacity 0.2s ease;

@@ -35,7 +35,7 @@
 
 .home-subtitle {
   font-size: 1.8rem;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--text-secondary);
   margin-bottom: 3rem;
   animation: fadeInUp 0.8s ease;
 }
@@ -119,7 +119,7 @@
 
 .settings-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .settings-btn:hover {
@@ -161,22 +161,22 @@
 
 .practice-btn {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .game-btn {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .puzzle-btn {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .progress-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .progress-btn:hover {
@@ -186,7 +186,7 @@
 
 .storybook-btn {
   background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .storybook-btn:hover {
@@ -196,7 +196,7 @@
 
 .worldmap-btn {
   background: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .worldmap-btn:hover {
@@ -206,12 +206,12 @@
 
 .login-btn {
   background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .register-btn {
   background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {

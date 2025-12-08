@@ -48,7 +48,7 @@
 
 /* Story List */
 .story-list {
-  background: white;
+  background: var(--surface);
   border-radius: 25px;
   padding: 2rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -121,7 +121,7 @@
 
 /* Story Reader */
 .story-reader {
-  background: white;
+  background: var(--surface);
   border-radius: 25px;
   padding: 2.5rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -161,7 +161,7 @@
 
 .page-indicator {
   background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
-  color: white;
+  color: var(--text-primary);
   padding: 0.5rem 1.5rem;
   border-radius: 20px;
   font-weight: bold;
@@ -216,7 +216,7 @@
 
 .listen-btn {
   background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .listen-btn:hover:not(:disabled) {
@@ -231,7 +231,7 @@
 
 .read-btn {
   background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
-  color: white;
+  color: var(--text-primary);
 }
 
 .read-btn:hover {
@@ -241,7 +241,7 @@
 
 .read-feedback {
   background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
-  color: white;
+  color: var(--text-primary);
   padding: 1rem 2rem;
   border-radius: 15px;
   text-align: center;
@@ -279,7 +279,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%);
-  color: white;
+  color: var(--text-primary);
   box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
