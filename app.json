@@ -1,13 +1,17 @@
 {
   "expo": {
-    "name": "Konusma Terapisi",
-    "slug": "konusma-terapisi",
+    "name": "Konusma Terapisti",
+    "slug": "konusma-terapisti",
+    "scheme": "konusmaterapisti",
     "version": "1.0.0",
     "orientation": "portrait",
+    "userInterfaceStyle": "light",
     "jsEngine": "hermes",
-    "assetBundlePatterns": ["**/*"],
-    "android": {
-      "permissions": ["RECORD_AUDIO"]
+    "experiments": {
+      "typedRoutes": true
+    },
+    "web": {
+      "bundler": "metro"
     }
   }
 }

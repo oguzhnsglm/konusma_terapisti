@@ -1,23 +1,48 @@
 {
-  "name": "konusma-terapisi-web",
-  "private": true,
+  "name": "konusma-terapisti",
   "version": "1.0.0",
-  "type": "module",
+  "private": true,
+  "main": "expo-router/entry",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "concurrently -k \"npx expo start --web\" \"node scripts/proxy-web-3000.mjs\"",
+    "dev:native": "npx expo start",
+    "android": "npx expo run:android",
+    "ios": "npx expo run:ios",
+    "start": "npx expo start",
+    "lint": "echo \"add eslint if needed\""
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.0"
+    "@expo/vector-icons": "^14.0.2",
+    "concurrently": "^8.2.2",
+    "expo": "~52.0.0",
+    "expo-linear-gradient": "~14.0.1",
+    "expo-router": "~4.0.21",
+    "expo-status-bar": "~1.12.1",
+    "express": "^4.18.3",
+    "http-proxy-middleware": "^3.0.0",
+    "open": "^9.1.0",
+    "@supabase/supabase-js": "^2.45.4",
+    "react-native-url-polyfill": "^2.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.76.5",
+    "react-native-gesture-handler": "~2.16.2",
+    "react-native-reanimated": "~3.11.0",
+    "react-native-safe-area-context": "4.10.5",
+    "react-native-screens": "~4.7.0",
+    "react-native-svg": "^14.1.0",
+    "react-native-web": "~0.19.12"
   },
   "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@react-native-community/cli-server-api": "^12.3.7",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
-    "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.0.8"
+    "babel-plugin-module-resolver": "^5.0.0",
+    "react-refresh": "^0.14.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

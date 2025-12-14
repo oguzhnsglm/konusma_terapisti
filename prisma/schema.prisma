@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model profiles {
+  id         String   @id @db.Uuid
+  email      String?
+  full_name  String?
+  created_at DateTime? @db.Timestamptz
+  updated_at DateTime? @db.Timestamptz
+}
+
+model levels {
+  id          Int       @id @default(autoincrement())
+  title       String?
+  description String?
+  order_index Int?
+  created_at  DateTime? @db.Timestamptz
+  words       words[]
+  user_progress user_progress[]
+}
+
+model words {
+  id          Int       @id @default(autoincrement())
+  level_id    Int
+  word        String?
+  order_index Int?
+  created_at  DateTime? @db.Timestamptz
+  level       levels    @relation(fields: [level_id], references: [id], onDelete: Cascade)
+  user_word_progress user_word_progress[]
+  word_attempts word_attempts[]
+}
+
+model user_progress {
+  id           Int       @id @default(autoincrement())
+  user_id      String    @db.Uuid
+  level_id     Int
+  is_unlocked  Boolean   @default(false)
+  is_completed Boolean   @default(false)
+  completed_at DateTime? @db.Timestamptz
+  created_at   DateTime? @db.Timestamptz
+  updated_at   DateTime? @db.Timestamptz
+
+  level levels @relation(fields: [level_id], references: [id], onDelete: Cascade)
+}
+
+model user_word_progress {
+  id             Int       @id @default(autoincrement())
+  user_id        String    @db.Uuid
+  word_id        Int
+  status         String?
+  best_score     Float?
+  attempt_count  Int?
+  last_attempt_at DateTime? @db.Timestamptz
+  created_at     DateTime? @db.Timestamptz
+  updated_at     DateTime? @db.Timestamptz
+
+  word words @relation(fields: [word_id], references: [id], onDelete: Cascade)
+}
+
+model word_attempts {
+  id              Int       @id @default(autoincrement())
+  user_id         String    @db.Uuid
+  word_id         Int
+  recognized_text String?
+  score           Float?
+  is_successful   Boolean?
+  status          String?
+  attempt_date    DateTime? @db.Timestamptz
+
+  word words @relation(fields: [word_id], references: [id], onDelete: Cascade)
+}

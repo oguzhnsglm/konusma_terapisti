@@ -2,10 +2,16 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Pressable, Text, StyleSheet, View, Animated, Easing } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function RecordButton({ isRecording, onPress, disabled }) {
+type Props = {
+  isRecording: boolean;
+  onPress: () => void;
+  disabled?: boolean;
+};
+
+export default function RecordButton({ isRecording, onPress, disabled = false }: Props) {
   const pressScale = useRef(new Animated.Value(1)).current;
   const pulse = useRef(new Animated.Value(0)).current;
-  const loopRef = useRef(null);
+  const loopRef = useRef<Animated.CompositeAnimation | null>(null);
 
   useEffect(() => {
     if (isRecording) {
@@ -178,4 +184,3 @@ const styles = StyleSheet.create({
     letterSpacing: 0.6,
   },
 });
-

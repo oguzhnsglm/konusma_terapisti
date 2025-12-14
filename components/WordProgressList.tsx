@@ -1,25 +1,36 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, StyleProp, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const STATUS_INDICATOR = {
-  success: { color: '#2e8b57', label: '+' },
-  fail: { color: '#d0455b', label: '-' },
-  pending: { color: '#7857d8', label: 'o' },
+type ProgressItem = {
+  word: string;
+  status?: 'success' | 'fail' | 'pending';
 };
 
-export default function WordProgressList({ progress, currentIndex, style }) {
+type Props = {
+  progress: ProgressItem[];
+  currentIndex: number;
+  style?: StyleProp<ViewStyle>;
+};
+
+const STATUS_INDICATOR: Record<string, { color: string; label: string }> = {
+  success: { color: '#7bdc96', label: '✓' },
+  fail: { color: '#ff9fd3', label: '!' },
+  pending: { color: '#9bb7ff', label: '•' },
+};
+
+export default function WordProgressList({ progress, currentIndex, style }: Props) {
   const itemCount = progress.length || 0;
   const computedCurrent = itemCount > 0 ? currentIndex % itemCount : 0;
 
   return (
     <LinearGradient
-      colors={['rgba(122, 94, 230, 0.35)', 'rgba(191, 155, 255, 0.25)']}
+      colors={['#fef5ff', '#f1f6ff']}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       style={[styles.wrapper, style]}
     >
-      <Text style={styles.title}>Kelime Yolculugu</Text>
+      <Text style={styles.title}>Kelime Yolculuğu</Text>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
@@ -65,9 +76,9 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     paddingVertical: 26,
     paddingHorizontal: 20,
-    shadowColor: '#5a33d6',
-    shadowOpacity: 0.18,
-    shadowRadius: 18,
+    shadowColor: '#c1d5ff',
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
     shadowOffset: { width: 0, height: 10 },
     elevation: 8,
     width: '100%',
@@ -75,8 +86,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#2f1b4e',
+    fontWeight: '800',
+    color: '#1f1b3a',
     marginBottom: 18,
     letterSpacing: 0.4,
   },
@@ -91,27 +102,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+    borderColor: 'rgba(0, 0, 0, 0.05)',
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
     gap: 12,
   },
   wordPending: {
-    borderColor: 'rgba(142, 118, 222, 0.35)',
+    borderColor: 'rgba(155, 183, 255, 0.45)',
   },
   wordSuccess: {
-    borderColor: 'rgba(44, 162, 95, 0.4)',
-    backgroundColor: 'rgba(76, 175, 119, 0.15)',
+    borderColor: 'rgba(123, 220, 150, 0.5)',
+    backgroundColor: 'rgba(123, 220, 150, 0.18)',
   },
   wordFail: {
-    borderColor: 'rgba(214, 71, 97, 0.4)',
-    backgroundColor: 'rgba(214, 71, 135, 0.15)',
+    borderColor: 'rgba(255, 159, 211, 0.5)',
+    backgroundColor: 'rgba(255, 159, 211, 0.2)',
   },
   wordActive: {
     borderWidth: 2,
-    borderColor: '#6c63ff',
+    borderColor: '#d9468f',
     transform: [{ scale: 1.02 }],
-    shadowColor: '#6c63ff',
-    shadowOpacity: 0.16,
+    shadowColor: '#d9468f',
+    shadowOpacity: 0.18,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 6 },
     elevation: 5,
@@ -122,28 +133,27 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#7857d8',
+    backgroundColor: '#f2e9ff',
   },
   indicatorActive: {
-    shadowColor: '#6c63ff',
+    shadowColor: '#d9468f',
     shadowOpacity: 0.4,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
   },
   indicatorLabel: {
-    color: '#fff',
+    color: '#1f1b3a',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '800',
   },
   wordLabel: {
     fontSize: 18,
-    color: '#362153',
-    fontWeight: '600',
+    color: '#1f1b3a',
+    fontWeight: '700',
     letterSpacing: 0.3,
   },
   wordLabelActive: {
-    color: '#2b0b73',
-    fontWeight: '700',
+    color: '#d9468f',
+    fontWeight: '800',
   },
 });
-

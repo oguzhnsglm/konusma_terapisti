@@ -1,0 +1,27 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "types": [
+      "expo-router/types"
+    ]
+  },
+  "include": [
+    "./app",
+    "./context",
+    "./components",
+    "./logic",
+    "./scripts",
+    "./**/*.ts",
+    "./**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
+  "exclude": [
+    "legacy-web",
+    "node_modules"
+  ]
+}
