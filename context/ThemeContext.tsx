@@ -8,6 +8,7 @@ type ThemeContextValue = {
   theme: Theme;
   language: Language;
   toggleTheme: () => void;
+  setTheme: (mode: Theme) => void;
   changeLanguage: (lang: Language) => void;
   isDark: boolean;
 };
@@ -34,7 +35,7 @@ function safeSet(key: string, value: string) {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemScheme: ColorSchemeName = useColorScheme();
-  const [theme, setTheme] = useState<Theme>(() => (safeGet('theme', '') as Theme) || (systemScheme === 'dark' ? 'dark' : 'light'));
+  const [theme, setThemeState] = useState<Theme>(() => (safeGet('theme', '') as Theme) || (systemScheme === 'dark' ? 'dark' : 'light'));
   const [language, setLanguage] = useState<Language>(() => (safeGet('language', '') as Language) || 'tr');
 
   useEffect(() => {
@@ -52,7 +53,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     () => ({
       theme,
       language,
-      toggleTheme: () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light')),
+      toggleTheme: () => setThemeState((prev) => (prev === 'light' ? 'dark' : 'light')),
+      setTheme: (mode: Theme) => setThemeState(mode),
       changeLanguage: (lang: Language) => setLanguage(lang),
       isDark: theme === 'dark',
     }),

@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { Href, useRouter } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useProgress } from '../../context/ProgressContext';
 import { useAudio } from '../../context/AudioContext';
@@ -9,14 +9,14 @@ const quickGames = [
   { title: 'Kafiye Oyunu', route: '/games/rhyme', color: '#5ac8fa' },
   { title: 'Renk Oyunu', route: '/games/colors', color: '#34c759' },
   { title: 'Sayma Oyunu', route: '/games/counting', color: '#ffb347' },
-];
+] satisfies { title: string; route: Href; color: string }[];
 
 export default function MiniGamesPage() {
   const router = useRouter();
   const { incrementGames } = useProgress();
   const { playSfx } = useAudio();
 
-  const handleNav = (route: string) => {
+  const handleNav = (route: Href) => {
     playSfx('click');
     incrementGames();
     router.push(route);
@@ -25,9 +25,6 @@ export default function MiniGamesPage() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerRow}>
-        <Pressable onPress={() => router.push('/')} style={({ pressed }) => [styles.back, pressed && styles.pressed]}>
-          <Text style={styles.backLabel}>Ana Menü</Text>
-        </Pressable>
         <Text style={styles.title}>Mini Oyunlar</Text>
         <Text style={styles.subtitle}>Eğlenceli oyunlarla öğren!</Text>
       </View>
@@ -68,17 +65,6 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     gap: 6,
-  },
-  back: {
-    alignSelf: 'flex-start',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    backgroundColor: '#efe9ff',
-  },
-  backLabel: {
-    color: '#6a5acd',
-    fontWeight: '700',
   },
   title: {
     fontSize: 24,

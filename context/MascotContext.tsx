@@ -8,9 +8,18 @@ type MascotContextValue = {
 };
 
 const praiseMessages: Record<string, string[]> = {
-  default: ['Bravo!', 'Harikasın!', 'Süpersin!', 'Aferin!'],
-  correctAnswer: ['Doğru!', 'Bildin!', 'Harika cevap!', 'Süper!'],
-  questCompleted: ['Görev tamamlandı!', 'Hepsini bitirdin!', 'Müthişsin!'],
+  default: [
+    'Bravo!', 'Süper!', 'Harikasın!', 'Mükemmel!', 'Aferin sana!',
+    'Çok iyi!', 'Tebrikler!', 'Harika iş!', 'Müthişsin!', 'Kusursuz!'
+  ],
+  correctAnswer: [
+    'Doğru!', 'Bildin!', 'Harika cevap!', 'Süper!', 'Çok doğru!',
+    'Tam isabet!', 'Bravo sana!', 'Mükemmel!', 'Kesinlikle!', 'Aynen öyle!'
+  ],
+  questCompleted: [
+    'Görev tamamlandı!', 'Hepsini bitirdin!', 'Müthişsin!', 'Başardın!',
+    'İnanılmaz!', 'Süpersin!', 'Tebrikler!', 'Harika gidiyorsun!'
+  ],
 };
 
 const MascotContext = createContext<MascotContextValue | undefined>(undefined);

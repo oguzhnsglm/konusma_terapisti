@@ -1,186 +1,220 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
-import { usePractice } from '../../context/PracticeContext';
+import { StyleSheet, Text, View, Pressable, ScrollView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useProgress } from '../../context/ProgressContext';
+import { useTheme } from '../../context/ThemeContext';
 
-const { width } = Dimensions.get('window');
+const WORLDS = [
+  {
+    id: 1,
+    name: 'Meyveler Dünyası',
+    emoji: '🍎',
+    description: 'Tatlı meyvelerle kelime öğren',
+    requiredStars: 0,
+    rewards: 'Melon etiketleri',
+  },
+  {
+    id: 2,
+    name: 'Hayvanlar Dünyası',
+    emoji: '🐱',
+    description: 'Sevimli hayvanları tanı',
+    requiredStars: 5,
+    rewards: 'Paw sticker\'ları',
+  },
+  {
+    id: 3,
+    name: 'Doğa Dünyası',
+    emoji: '🌳',
+    description: 'Ağaçlar ve çiçeklerle gezin',
+    requiredStars: 15,
+    rewards: 'Yaprak kartları',
+  },
+  {
+    id: 4,
+    name: 'Araçlar Dünyası',
+    emoji: '🚗',
+    description: 'Farklı araçları keşfet',
+    requiredStars: 30,
+    rewards: 'Araç emojileri',
+  },
+  {
+    id: 5,
+    name: 'Gök Dünyası',
+    emoji: '🌙',
+    description: 'Yıldızlar ve gökyüzü',
+    requiredStars: 50,
+    rewards: 'Gök görselleri',
+  },
+  {
+    id: 6,
+    name: 'Oyuncaklar Dünyası',
+    emoji: '🎮',
+    description: 'Eğlenceli oyuncakları bul',
+    requiredStars: 75,
+    rewards: 'Oyuncak etiketleri',
+  },
+];
 
-export default function LevelSelectScreen() {
+export default function LevelsScreen() {
   const router = useRouter();
-  const { levels } = usePractice();
+  const { progress } = useProgress();
+  const { theme } = useTheme();
+
+  const bgColor = theme === 'dark' ? '#05070f' : '#fefefe';
+  const cardColor = theme === 'dark' ? 'rgba(255,255,255,0.06)' : '#ffffff';
+  const textPrimary = theme === 'dark' ? '#f5f7ff' : '#111323';
+  const textSecondary = theme === 'dark' ? '#d5dbff' : '#606481';
+  const borderColor = theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(15,23,42,0.1)';
+  const unlockColor = '#a78bfa';
+  const lockedColor = theme === 'dark' ? '#4a4a6a' : '#d4d4d4';
+
+  const totalStars = progress.achievements.reduce((sum, a) => sum + a.starsEarned, 0);
 
   return (
     <LinearGradient
-      colors={['#fdf5ff', '#f3f7ff', '#e8fbff']}
-      style={styles.gradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
+      colors={theme === 'dark' ? ['#05070f', '#070d19'] : ['#fefefe', '#f7f9ff']}
+      style={styles.screen}
     >
-      <Text style={styles.header}>Konuşma Yolculuğu</Text>
-      <Text style={styles.subtitle}>
-        Bölümleri sırayla tamamla, kilitleri aç ve telaffuzunu güçlendir. Baloncuk gibi yumuşak ödüller seni bekliyor.
-      </Text>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Pressable onPress={() => router.push('/')} style={styles.backBtn}>
+            <Ionicons name="chevron-back" size={24} color={unlockColor} />
+          </Pressable>
+          <View>
+            <Text style={[styles.title, { color: textPrimary }]}>Dünyalar Haritası</Text>
+            <Text style={[styles.subtitle, { color: textSecondary }]}>
+              Yıldız topla ve yeni dünyaların kilidini aç! 🌟
+            </Text>
+          </View>
+        </View>
 
-      <View style={styles.grid}>
-        {levels.map((level) => {
-          const locked = !level.unlocked;
-          const completed = level.completed;
+        {/* Star Counter */}
+        <View style={[styles.starCard, { backgroundColor: cardColor, borderColor }]}>
+          <Ionicons name="star" size={28} color="#fbbf24" />
+          <View>
+            <Text style={[styles.starLabel, { color: textSecondary }]}>Toplam Yıldız</Text>
+            <Text style={[styles.starValue, { color: '#fbbf24' }]}>{totalStars}</Text>
+          </View>
+        </View>
 
-          return (
-            <Pressable
-              key={level.id}
-              onPress={() => {
-                if (!locked) {
-                  router.push(`/levels/${level.id}`);
-                }
-              }}
-              style={({ pressed }) => [
-                styles.cardShell,
-                pressed && !locked ? styles.cardPressed : null,
-              ]}
-            >
-              <LinearGradient
-                colors={
-                  completed
-                    ? ['#e6fff1', '#d5ffe7']
-                    : locked
-                    ? ['#f0e8ff', '#e5f0ff']
-                    : ['#ffe8f4', '#f3f0ff']
-                }
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.card}
+        {/* Worlds Grid */}
+        <View style={styles.worldsGrid}>
+          {WORLDS.map((world) => {
+            const isUnlocked = totalStars >= world.requiredStars;
+            const isCurrentWorld = progress.currentWorld === world.id;
+
+            return (
+              <Pressable
+                key={world.id}
+                onPress={() => isUnlocked && router.push(`/practice/${world.id}`)}
+                style={({ pressed }) => [
+                  styles.worldCard,
+                  {
+                    backgroundColor: cardColor,
+                    borderColor: isCurrentWorld ? unlockColor : borderColor,
+                    opacity: pressed && isUnlocked ? 0.9 : 1,
+                  },
+                  isCurrentWorld && styles.activeWorld,
+                ]}
               >
-                <View style={styles.cardTop}>
-                  <Text style={styles.levelNumber}>Bölüm {level.id}</Text>
-                  <Text style={styles.levelTitle}>{level.title}</Text>
-                </View>
-                <Text style={styles.levelDescription} numberOfLines={2}>
-                  {level.description}
-                </Text>
-                <View style={styles.badgeRow}>
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{level.words.length} kelime</Text>
+                {/* Locked Overlay */}
+                {!isUnlocked && (
+                  <View style={[styles.lockedOverlay, { backgroundColor: `${lockedColor}60` }]}>
+                    <Ionicons name="lock-closed" size={32} color={lockedColor} />
+                    <Text style={[styles.lockedText, { color: lockedColor }]}>
+                      {world.requiredStars}⭐ gerek
+                    </Text>
                   </View>
-                  {completed ? (
-                    <View style={[styles.badge, styles.successBadge]}>
-                      <Text style={[styles.badgeText, styles.successBadgeText]}>Tamamlandı</Text>
-                    </View>
-                  ) : null}
-                </View>
-                {locked ? (
-                  <View style={styles.lockOverlay}>
-                    <Text style={styles.lockIcon}>Kilitli</Text>
-                    <Text style={styles.lockText}>Önceki bölümü tamamla</Text>
+                )}
+
+                {/* World Content */}
+                <Text style={styles.worldEmoji}>{world.emoji}</Text>
+                <Text style={[styles.worldName, { color: textPrimary }]}>{world.name}</Text>
+                <Text style={[styles.worldDesc, { color: textSecondary }]}>{world.description}</Text>
+
+                {isCurrentWorld && (
+                  <View style={[styles.badge, { backgroundColor: unlockColor }]}>
+                    <Text style={styles.badgeText}>Aktif</Text>
                   </View>
-                ) : null}
-              </LinearGradient>
-            </Pressable>
-          );
-        })}
-      </View>
+                )}
+
+                {isUnlocked && (
+                  <Text style={[styles.reward, { color: unlockColor }]}>🎁 {world.rewards}</Text>
+                )}
+              </Pressable>
+            );
+          })}
+        </View>
+
+        {/* Info Section */}
+        <View style={[styles.infoCard, { backgroundColor: cardColor, borderColor }]}>
+          <Ionicons name="information-circle" size={24} color={unlockColor} />
+          <View style={styles.infoText}>
+            <Text style={[styles.infoTitle, { color: textPrimary }]}>İpucu</Text>
+            <Text style={[styles.infoDesc, { color: textSecondary }]}>
+              Her oyunu oynayarak yıldız kazanın. Yeni dünyaları keşfetmek için gerekli yıldız sayısını kontrol edin!
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 48,
-    gap: 12,
-  },
-  header: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: '#1f1b3a',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#4b4c7a',
-    lineHeight: 22,
-    maxWidth: 540,
-  },
-  grid: {
-    marginTop: 24,
+  screen: { flex: 1 },
+  content: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 40, gap: 16 },
+  header: { gap: 12, marginBottom: 8 },
+  backBtn: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  title: { fontSize: 28, fontWeight: '800' },
+  subtitle: { fontSize: 12, fontWeight: '600' },
+  starCard: {
+    borderRadius: 16,
+    padding: 16,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-  },
-  cardShell: {
-    width: width > 720 ? (width - 24 * 2 - 16 * 2) / 2 : '100%',
-  },
-  cardPressed: {
-    transform: [{ scale: 0.98 }],
-  },
-  card: {
-    borderRadius: 24,
-    padding: 18,
+    alignItems: 'center',
     gap: 12,
-    shadowColor: '#c1d5ff',
-    shadowOpacity: 0.28,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 10,
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.04)',
   },
-  cardTop: {
-    gap: 4,
+  starLabel: { fontSize: 12, fontWeight: '600' },
+  starValue: { fontSize: 24, fontWeight: '800' },
+  worldsGrid: { gap: 12 },
+  worldCard: {
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+    gap: 8,
+    borderWidth: 2,
+    position: 'relative',
   },
-  levelNumber: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#4b4c7a',
-    letterSpacing: 0.5,
-  },
-  levelTitle: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: '#1f1b3a',
-  },
-  levelDescription: {
-    color: '#4b4c7a',
-    lineHeight: 20,
-    opacity: 0.95,
-  },
-  badgeRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  badge: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 999,
-    backgroundColor: 'rgba(0,0,0,0.06)',
-  },
-  badgeText: {
-    color: '#1f1b3a',
-    fontWeight: '800',
-    letterSpacing: 0.3,
-  },
-  successBadge: {
-    backgroundColor: 'rgba(255, 183, 219, 0.26)',
-  },
-  successBadgeText: {
-    color: '#1f1b3a',
-  },
-  lockOverlay: {
+  activeWorld: { shadowColor: '#a78bfa', shadowOpacity: 0.3, shadowRadius: 8 },
+  lockedOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
+    zIndex: 10,
   },
-  lockIcon: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#4b4c7a',
-    marginBottom: 6,
+  lockedText: { fontSize: 12, fontWeight: '700' },
+  worldEmoji: { fontSize: 40 },
+  worldName: { fontSize: 16, fontWeight: '800', textAlign: 'center' },
+  worldDesc: { fontSize: 12, fontWeight: '600', textAlign: 'center' },
+  badge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, marginTop: 4 },
+  badgeText: { color: '#fff', fontSize: 10, fontWeight: '700' },
+  reward: { fontSize: 11, fontWeight: '700', marginTop: 4 },
+  infoCard: {
+    borderRadius: 16,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    borderWidth: 1,
+    marginTop: 8,
   },
-  lockText: {
-    color: '#4b4c7a',
-    fontWeight: '700',
-    textAlign: 'center',
-    fontSize: 12,
-  },
+  infoText: { flex: 1, gap: 4 },
+  infoTitle: { fontSize: 14, fontWeight: '700' },
+  infoDesc: { fontSize: 12, fontWeight: '600' },
 });

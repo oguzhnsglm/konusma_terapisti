@@ -1,216 +1,424 @@
-import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { useAudio } from '../../context/AudioContext';
+import { StyleSheet, Text, View, Pressable, ScrollView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useProgress } from '../../context/ProgressContext';
-import { useMascot } from '../../context/MascotContext';
+import { useTheme } from '../../context/ThemeContext';
+import { playSuccess, playWrong, playClick, playCelebration } from '../../lib/soundUtils';
 
-const game = {
-  word: '_araba',
-  correctAnswer: 'K',
-  options: ['K', 'G', 'P'],
+interface WordQuestion {
+  word: string;
+  blank: number;
+  correct: string;
+  options: string[];
+  display: string;
+}
+
+const QUESTIONS: Record<string, WordQuestion[]> = {
+  easy: [
+    {
+      word: 'kedi',
+      blank: 0,
+      correct: 'K',
+      options: ['K', 'P', 'M'],
+      display: '_edi',
+    },
+    {
+      word: 'elma',
+      blank: 0,
+      correct: 'E',
+      options: ['E', 'A', 'U'],
+      display: '_lma',
+    },
+    {
+      word: 'muz',
+      blank: 0,
+      correct: 'M',
+      options: ['M', 'N', 'B'],
+      display: '_uz',
+    },
+  ],
+  medium: [
+    {
+      word: 'çiçek',
+      blank: 1,
+      correct: 'İ',
+      options: ['İ', 'E', 'A'],
+      display: 'ç_çek',
+    },
+    {
+      word: 'güneş',
+      blank: 2,
+      correct: 'N',
+      options: ['N', 'R', 'L'],
+      display: 'güneş',
+    },
+    {
+      word: 'balık',
+      blank: 1,
+      correct: 'A',
+      options: ['A', 'E', 'I'],
+      display: 'b_lık',
+    },
+  ],
+  hard: [
+    {
+      word: 'papatya',
+      blank: 3,
+      correct: 'T',
+      options: ['T', 'D', 'S'],
+      display: 'pap_tya',
+    },
+    {
+      word: 'kelebek',
+      blank: 2,
+      correct: 'L',
+      options: ['L', 'R', 'N'],
+      display: 'ke_ebek',
+    },
+    {
+      word: 'ayakkabı',
+      blank: 4,
+      correct: 'K',
+      options: ['K', 'Ş', 'C'],
+      display: 'ayak_abı',
+    },
+  ],
 };
 
 export default function WordFillGame() {
   const router = useRouter();
-  const { incrementGames } = useProgress();
-  const { playSfx } = useAudio();
-  const { celebrate } = useMascot();
+  const { addStarsToday, addWordToday, addSessionToday, addMinutesToday, addAchievement } = useProgress();
+  const { theme } = useTheme();
+  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
+  const [gameStarted, setGameStarted] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [startTime, setStartTime] = useState<number>(0);
+
+  const questions = QUESTIONS[difficulty];
+  const currentQuestion = questions[currentIndex];
+
+  const bgColor = theme === 'dark' ? '#05070f' : '#fefefe';
+  const cardColor = theme === 'dark' ? 'rgba(255,255,255,0.06)' : '#ffffff';
+  const textPrimary = theme === 'dark' ? '#f5f7ff' : '#111323';
+  const textSecondary = theme === 'dark' ? '#d5dbff' : '#606481';
+  const borderColor = theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(15,23,42,0.1)';
+
+  const startGame = (level: 'easy' | 'medium' | 'hard') => {
+    setDifficulty(level);
+    setCurrentIndex(0);
+    setScore(0);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setGameStarted(true);
+    setStartTime(Date.now());
+    playClick();
+  };
 
   const handleAnswer = (answer: string) => {
+    if (selectedAnswer !== null) return;
     setSelectedAnswer(answer);
     setShowResult(true);
-    if (answer === game.correctAnswer) {
-      incrementGames();
-      playSfx('success');
-      celebrate('correctAnswer');
+
+    if (answer === currentQuestion.correct) {
+      setScore(score + 1);
+      playSuccess();
     } else {
-      playSfx('error');
+      playWrong();
     }
   };
 
-  const resetGame = () => {
-    setSelectedAnswer(null);
-    setShowResult(false);
+  const nextQuestion = () => {
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+      setSelectedAnswer(null);
+      setShowResult(false);
+      playClick();
+    } else {
+      finishGame();
+    }
   };
 
-  const isCorrect = selectedAnswer === game.correctAnswer;
+  const finishGame = () => {
+    playCelebration();
+    const duration = Math.round((Date.now() - startTime) / 60000);
+    const stars = difficulty === 'easy' ? 1 : difficulty === 'medium' ? 2 : 3;
+
+    addMinutesToday(Math.max(1, duration));
+    addWordToday(questions.length);
+    addSessionToday(1);
+    addStarsToday(stars);
+    addAchievement('word-fill', difficulty, stars);
+
+    setGameStarted(false);
+  };
+
+  if (!gameStarted) {
+    return (
+      <LinearGradient
+        colors={theme === 'dark' ? ['#05070f', '#070d19'] : ['#fefefe', '#f7f9ff']}
+        style={styles.screen}
+      >
+        <View style={styles.difficultyScreen}>
+          <Pressable onPress={() => router.push('/')} style={styles.backBtn}>
+            <Ionicons name="chevron-back" size={24} color="#a78bfa" />
+          </Pressable>
+          <Text style={[styles.gameTitle, { color: textPrimary }]}>Harf Canavarı 🦖</Text>
+          <Text style={[styles.description, { color: textSecondary }]}>
+            Eksik harfleri tamamla ve kelimeleri tamamla!
+          </Text>
+          <View style={styles.difficultyOptions}>
+            <DifficultyBtn
+              label="Kolay"
+              onPress={() => startGame('easy')}
+              bgColor={cardColor}
+              textColor={textPrimary}
+              borderColor={borderColor}
+              icon="🟢"
+            />
+            <DifficultyBtn
+              label="Orta"
+              onPress={() => startGame('medium')}
+              bgColor={cardColor}
+              textColor={textPrimary}
+              borderColor={borderColor}
+              icon="🟡"
+            />
+            <DifficultyBtn
+              label="Zor"
+              onPress={() => startGame('hard')}
+              bgColor={cardColor}
+              textColor={textPrimary}
+              borderColor={borderColor}
+              icon="🔴"
+            />
+          </View>
+        </View>
+      </LinearGradient>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topRow}>
-        <Pressable onPress={() => router.push('/games')} style={({ pressed }) => [styles.backBtn, pressed && styles.pressed]}>
-          <Text style={styles.backText}>Oyunlara Dön</Text>
-        </Pressable>
-        <Pressable onPress={() => router.push('/')} style={({ pressed }) => [styles.backBtn, styles.homeBtn, pressed && styles.pressed]}>
-          <Text style={styles.backText}>Ana Menü</Text>
-        </Pressable>
-      </View>
-
-      <Text style={styles.title}>Kelime Tamamlama</Text>
-      <Text style={styles.subtitle}>Eksik harfi bul!</Text>
-
-      <View style={styles.gameBox}>
-        <View style={styles.wordDisplay}>
-          <Text style={styles.wordText}>{game.word}</Text>
-          <Text style={styles.instruction}>Eksik harfi seç</Text>
+    <LinearGradient
+      colors={theme === 'dark' ? ['#05070f', '#070d19'] : ['#fefefe', '#f7f9ff']}
+      style={styles.screen}
+    >
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Pressable onPress={() => setGameStarted(false)} style={styles.backBtn}>
+            <Ionicons name="chevron-back" size={24} color="#a78bfa" />
+          </Pressable>
+          <Text style={[styles.gameTitle, { color: textPrimary }]}>Harf Canavarı</Text>
+          <Text style={[styles.progress, { color: textSecondary }]}>
+            {currentIndex + 1}/{questions.length}
+          </Text>
         </View>
 
-        <View style={styles.options}>
-          {game.options.map((option) => (
-            <Pressable
-              key={option}
+        {/* Question Card */}
+        <View style={[styles.questionCard, { backgroundColor: cardColor, borderColor }]}>
+          <Text style={[styles.wordDisplay, { color: textPrimary }]}>{currentQuestion.display}</Text>
+          <Text style={[styles.instruction, { color: textSecondary }]}>Eksik harfi seç</Text>
+        </View>
+
+        {/* Options */}
+        <View style={styles.optionsContainer}>
+          {currentQuestion.options.map((option, idx) => (
+            <OptionBtn
+              key={idx}
+              option={option}
+              isSelected={selectedAnswer === option}
+              isCorrect={option === currentQuestion.correct}
+              showResult={showResult}
               onPress={() => handleAnswer(option)}
-              disabled={showResult}
-              style={({ pressed }) => [
-                styles.option,
-                showResult && selectedAnswer === option
-                  ? isCorrect
-                    ? styles.correct
-                    : styles.incorrect
-                  : null,
-                pressed && styles.pressed,
-              ]}
-            >
-              <Text style={styles.optionLabel}>{option}</Text>
-            </Pressable>
+              disabled={selectedAnswer !== null}
+              bgColor={cardColor}
+              textColor={textPrimary}
+              borderColor={borderColor}
+            />
           ))}
         </View>
 
+        {/* Result */}
         {showResult && (
-          <View style={[styles.resultBox, isCorrect ? styles.resultSuccess : styles.resultError]}>
-            <Text style={styles.resultLabel}>{isCorrect ? 'Doğru cevap!' : 'Tekrar dene'}</Text>
-            <Text style={styles.resultDetail}>
-              Doğru cevap: <Text style={styles.bold}>K</Text>
+          <View
+            style={[
+              styles.resultCard,
+              { backgroundColor: cardColor, borderColor },
+              selectedAnswer === currentQuestion.correct && styles.resultSuccess,
+              selectedAnswer !== currentQuestion.correct && styles.resultError,
+            ]}
+          >
+            <Ionicons
+              name={selectedAnswer === currentQuestion.correct ? 'checkmark-circle' : 'close-circle'}
+              size={40}
+              color={selectedAnswer === currentQuestion.correct ? '#34d399' : '#f87171'}
+            />
+            <Text style={[styles.resultText, { color: textPrimary }]}>
+              {selectedAnswer === currentQuestion.correct ? 'Doğru!' : 'Tekrar dene!'}
             </Text>
-            <Pressable onPress={resetGame} style={({ pressed }) => [styles.retryBtn, pressed && styles.pressed]}>
-              <Text style={styles.retryLabel}>Tekrar Dene</Text>
+            <Text style={[styles.resultDetail, { color: textSecondary }]}>
+              Doğru cevap: <Text style={[styles.bold, { color: textPrimary }]}>{currentQuestion.correct}</Text>
+            </Text>
+            <Pressable
+              style={styles.nextBtn}
+              onPress={nextQuestion}
+            >
+              <Text style={styles.nextBtnText}>
+                {currentIndex === questions.length - 1 ? 'Bitir' : 'Devam'}
+              </Text>
             </Pressable>
           </View>
         )}
-      </View>
-    </View>
+
+        {/* Score */}
+        <View style={[styles.scoreCard, { backgroundColor: cardColor, borderColor }]}>
+          <Text style={[styles.scoreLabel, { color: textSecondary }]}>Doğru Cevaplar</Text>
+          <Text style={[styles.scoreValue, { color: '#fbbf24' }]}>{score}/{questions.length}</Text>
+        </View>
+      </ScrollView>
+    </LinearGradient>
+  );
+}
+
+function DifficultyBtn({
+  label,
+  onPress,
+  bgColor,
+  textColor,
+  borderColor,
+  icon,
+}: {
+  label: string;
+  onPress: () => void;
+  bgColor: string;
+  textColor: string;
+  borderColor: string;
+  icon: string;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.diffBtn,
+        { backgroundColor: bgColor, borderColor, opacity: pressed ? 0.7 : 1 },
+      ]}
+    >
+      <Text style={styles.diffIcon}>{icon}</Text>
+      <Text style={[styles.diffLabel, { color: textColor }]}>{label}</Text>
+    </Pressable>
+  );
+}
+
+function OptionBtn({
+  option,
+  isSelected,
+  isCorrect,
+  showResult,
+  onPress,
+  disabled,
+  bgColor,
+  textColor,
+  borderColor,
+}: {
+  option: string;
+  isSelected: boolean;
+  isCorrect: boolean;
+  showResult: boolean;
+  onPress: () => void;
+  disabled: boolean;
+  bgColor: string;
+  textColor: string;
+  borderColor: string;
+}) {
+  const getBgColor = () => {
+    if (showResult && isSelected) {
+      return isCorrect ? '#d4f5d8' : '#ffe4e8';
+    }
+    if (showResult && isCorrect) {
+      return '#d4f5d8';
+    }
+    return bgColor;
+  };
+
+  const getBorderColor = () => {
+    if (showResult && isSelected) {
+      return isCorrect ? '#9be6a7' : '#ffc3cc';
+    }
+    if (showResult && isCorrect) {
+      return '#9be6a7';
+    }
+    return borderColor;
+  };
+
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={({ pressed }) => [
+        styles.option,
+        {
+          backgroundColor: getBgColor(),
+          borderColor: getBorderColor(),
+          opacity: pressed && !disabled ? 0.8 : 1,
+        },
+      ]}
+    >
+      <Text style={[styles.optionText, { color: textColor }]}>{option}</Text>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f6f1ff',
-    padding: 20,
-    gap: 14,
-  },
-  topRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  backBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    backgroundColor: '#efe9ff',
-  },
-  homeBtn: {
-    backgroundColor: '#ffe9f0',
-  },
-  backText: {
-    color: '#6a5acd',
-    fontWeight: '700',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#2f1b4e',
-  },
-  subtitle: {
-    color: '#4a3274',
-  },
-  gameBox: {
-    backgroundColor: '#fff',
+  screen: { flex: 1 },
+  content: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 40, gap: 16 },
+  difficultyScreen: { flex: 1, paddingHorizontal: 16, paddingTop: 20, justifyContent: 'center' },
+  backBtn: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  gameTitle: { fontSize: 28, fontWeight: '800', flex: 1 },
+  description: { fontSize: 14, fontWeight: '600', marginBottom: 24 },
+  header: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  progress: { fontSize: 12, fontWeight: '700' },
+  difficultyOptions: { gap: 12 },
+  diffBtn: {
     borderRadius: 16,
     padding: 16,
-    gap: 14,
-    shadowColor: '#7f6bff',
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 4,
-  },
-  wordDisplay: {
-    alignItems: 'center',
-    gap: 6,
-  },
-  wordText: {
-    fontSize: 34,
-    fontWeight: '800',
-    color: '#2f1b4e',
-  },
-  instruction: {
-    color: '#4a3274',
-  },
-  options: {
     flexDirection: 'row',
-    gap: 10,
-    justifyContent: 'space-between',
-  },
-  option: {
-    flex: 1,
-    backgroundColor: '#f2f0ff',
-    borderRadius: 12,
-    paddingVertical: 14,
     alignItems: 'center',
+    gap: 12,
     borderWidth: 1,
-    borderColor: '#dcd6ff',
   },
-  optionLabel: {
-    fontWeight: '800',
-    color: '#2f1b4e',
-    fontSize: 18,
+  diffIcon: { fontSize: 32 },
+  diffLabel: { fontWeight: '700', fontSize: 16 },
+  questionCard: { borderRadius: 20, padding: 24, alignItems: 'center', gap: 8, borderWidth: 1 },
+  wordDisplay: { fontSize: 42, fontWeight: '800', letterSpacing: 2 },
+  instruction: { fontSize: 12, fontWeight: '600' },
+  optionsContainer: { gap: 10 },
+  option: {
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    borderWidth: 2,
   },
-  correct: {
-    backgroundColor: '#d4f5d8',
-    borderColor: '#9be6a7',
-  },
-  incorrect: {
-    backgroundColor: '#ffe4e8',
-    borderColor: '#ffc3cc',
-  },
-  resultBox: {
-    padding: 12,
+  optionText: { fontSize: 20, fontWeight: '800' },
+  resultCard: { borderRadius: 16, padding: 20, alignItems: 'center', gap: 12, borderWidth: 1 },
+  resultSuccess: { borderColor: '#9be6a7' },
+  resultError: { borderColor: '#ffc3cc' },
+  resultText: { fontSize: 18, fontWeight: '800' },
+  resultDetail: { fontSize: 12, fontWeight: '600' },
+  bold: { fontWeight: '800' },
+  nextBtn: {
+    backgroundColor: '#a78bfa',
+    paddingVertical: 10,
+    paddingHorizontal: 24,
     borderRadius: 12,
-    gap: 6,
+    marginTop: 8,
   },
-  resultSuccess: {
-    backgroundColor: '#d4f5d8',
-  },
-  resultError: {
-    backgroundColor: '#ffe4e8',
-  },
-  resultLabel: {
-    fontWeight: '800',
-    color: '#2f1b4e',
-  },
-  resultDetail: {
-    color: '#4a3274',
-  },
-  bold: {
-    fontWeight: '800',
-  },
-  retryBtn: {
-    marginTop: 4,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 10,
-    backgroundColor: '#7f6bff',
-  },
-  retryLabel: {
-    color: '#fff',
-    fontWeight: '700',
-  },
-  pressed: {
-    opacity: 0.9,
-  },
+  nextBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
+  scoreCard: { borderRadius: 16, padding: 16, alignItems: 'center', gap: 8, borderWidth: 1 },
+  scoreLabel: { fontSize: 12, fontWeight: '600' },
+  scoreValue: { fontSize: 32, fontWeight: '800' },
 });

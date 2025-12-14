@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
+import './globals.css';
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -10,6 +11,7 @@ import { AudioProvider } from '../context/AudioContext';
 import { ProgressProvider } from '../context/ProgressContext';
 import { MascotProvider } from '../context/MascotContext';
 import Mascot from '../components/Mascot';
+import ReturnHomeButton from '../components/ReturnHomeButton';
 
 export default function RootLayout() {
   return (
@@ -23,6 +25,7 @@ export default function RootLayout() {
                   <StatusBar style="dark" />
                   <Stack screenOptions={{ headerShown: false }} />
                   <Mascot />
+                  <ReturnHomeButton />
                 </MascotProvider>
               </PracticeProvider>
             </ProgressProvider>

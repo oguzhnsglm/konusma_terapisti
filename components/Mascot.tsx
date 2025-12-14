@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Animated, StyleSheet, Text, View, Easing } from 'react-native';
 import Svg, { Ellipse, LinearGradient, Stop, Path, Circle, Defs, Line } from 'react-native-svg';
 import { useMascot } from '../context/MascotContext';
 
@@ -7,12 +7,59 @@ export default function Mascot() {
   const { isVisible, message, isCelebrating } = useMascot();
   const scale = useRef(new Animated.Value(1)).current;
   const glow = useRef(new Animated.Value(0)).current;
+  const float = useRef(new Animated.Value(0)).current;
+  const rotate = useRef(new Animated.Value(0)).current;
+
+  // Sürekli hafif yüzme animasyonu
+  useEffect(() => {
+    const floatAnim = Animated.loop(
+      Animated.sequence([
+        Animated.timing(float, {
+          toValue: 1,
+          duration: 2000,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
+        Animated.timing(float, {
+          toValue: 0,
+          duration: 2000,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    const rotateAnim = Animated.loop(
+      Animated.sequence([
+        Animated.timing(rotate, {
+          toValue: 1,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotate, {
+          toValue: 0,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    floatAnim.start();
+    rotateAnim.start();
+
+    return () => {
+      floatAnim.stop();
+      rotateAnim.stop();
+    };
+  }, [float, rotate]);
 
   useEffect(() => {
     if (isCelebrating) {
       const pulse = Animated.loop(
         Animated.sequence([
-          Animated.timing(scale, { toValue: 1.08, duration: 220, useNativeDriver: true }),
+          Animated.timing(scale, { toValue: 1.15, duration: 220, useNativeDriver: true }),
           Animated.timing(scale, { toValue: 1, duration: 220, useNativeDriver: true }),
         ]),
         { iterations: 3 },
@@ -23,17 +70,39 @@ export default function Mascot() {
     }
   }, [isCelebrating, scale, glow]);
 
+  const floatY = float.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -8],
+  });
+
+  const rotateZ = rotate.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['-3deg', '3deg'],
+  });
+
   return (
     <View style={styles.container} pointerEvents="none">
       {isVisible && (
-        <View style={styles.bubble}>
+        <Animated.View style={[
+          styles.bubble,
+          {
+            transform: [{ scale: scale.interpolate({ inputRange: [1, 1.15], outputRange: [1, 1.05] }) }],
+          },
+        ]}>
           <Text style={styles.message}>{message || 'Harika gidiyorsun!'}</Text>
-        </View>
+        </Animated.View>
       )}
       <Animated.View
         style={[
           styles.avatar,
-          { transform: [{ scale }], shadowOpacity: glow.interpolate({ inputRange: [0, 1], outputRange: [0.2, 0.35] }) },
+          {
+            transform: [
+              { translateY: floatY },
+              { rotate: rotateZ },
+              { scale },
+            ],
+            shadowOpacity: glow.interpolate({ inputRange: [0, 1], outputRange: [0.25, 0.45] }),
+          },
         ]}
       >
         <MascotShape />
@@ -107,13 +176,12 @@ const styles = StyleSheet.create({
   avatar: {
     width: 96,
     height: 96,
-    borderRadius: 32,
-    backgroundColor: '#f1eafe',
+    borderRadius: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#7f6bff',
-    shadowOpacity: 0.2,
-    shadowRadius: 14,
+    shadowColor: '#A78BFA',
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
     shadowOffset: { width: 0, height: 8 },
     elevation: 8,
   },
