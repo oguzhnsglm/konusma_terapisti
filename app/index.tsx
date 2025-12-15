@@ -96,6 +96,12 @@ const navSections = [
       { label: 'Ses Paketi', icon: 'musical-notes-outline', route: '/result' },
     ],
   },
+  {
+    title: 'Bilgi',
+    items: [
+      { label: 'Daha Fazla Bilgi', icon: 'information-circle-outline', route: '/about' },
+    ],
+  },
 ] satisfies NavSection[];
 
 const heroTiles = [
