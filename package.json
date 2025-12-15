@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
-    "@react-native-voice/voice": "^3.2.9",
+    "@react-native-voice/voice": "^3.2.3",
     "@supabase/supabase-js": "^2.45.4",
     "concurrently": "^8.2.2",
     "expo": "~54.0.0",

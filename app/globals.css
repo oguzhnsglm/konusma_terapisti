@@ -50,7 +50,10 @@
     0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Fade-in animation for cards */
+/* ============================================
+   MICRO ANIMATIONS - CARD ENTRANCE
+   ============================================ */
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -62,31 +65,285 @@
   }
 }
 
+@keyframes scalePopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px) translateY(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px) translateY(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+
 [data-animate="fade-in"] {
-  animation: fadeInUp 0.4s ease-out forwards;
+  animation: fadeInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+[data-animate="scale-pop"] {
+  animation: scalePopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+[data-animate="slide-left"] {
+  animation: slideInLeft 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+[data-animate="slide-right"] {
+  animation: slideInRight 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* Stagger animation delays */
 [data-animate="fade-in"]:nth-child(1) { animation-delay: 0ms; }
-[data-animate="fade-in"]:nth-child(2) { animation-delay: 50ms; }
-[data-animate="fade-in"]:nth-child(3) { animation-delay: 100ms; }
-[data-animate="fade-in"]:nth-child(4) { animation-delay: 150ms; }
-[data-animate="fade-in"]:nth-child(5) { animation-delay: 200ms; }
-[data-animate="fade-in"]:nth-child(6) { animation-delay: 250ms; }
+[data-animate="fade-in"]:nth-child(2) { animation-delay: 60ms; }
+[data-animate="fade-in"]:nth-child(3) { animation-delay: 120ms; }
+[data-animate="fade-in"]:nth-child(4) { animation-delay: 180ms; }
+[data-animate="fade-in"]:nth-child(5) { animation-delay: 240ms; }
+[data-animate="fade-in"]:nth-child(6) { animation-delay: 300ms; }
+[data-animate="fade-in"]:nth-child(7) { animation-delay: 360ms; }
+[data-animate="fade-in"]:nth-child(8) { animation-delay: 420ms; }
+[data-animate="fade-in"]:nth-child(9) { animation-delay: 480ms; }
+[data-animate="fade-in"]:nth-child(10) { animation-delay: 540ms; }
 
-/* Disable animations for users who prefer reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+/* ============================================
+   HOVER EFFECTS - SCALE & GLOW
+   ============================================ */
+
+[data-card="activity"] {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-card="activity"]:hover {
+  transform: scale(1.04) translateY(-4px);
+}
+
+/* ============================================
+   PULSING GLOW ANIMATION
+   ============================================ */
+
+@keyframes softPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4),
+                0 8px 24px rgba(0, 0, 0, 0.1);
   }
-  
-  [data-animate="fade-in"] {
-    animation: none;
+  50% {
+    box-shadow: 0 0 0 8px rgba(139, 92, 246, 0.1),
+                0 8px 24px rgba(139, 92, 246, 0.2);
+  }
+}
+
+@keyframes softPulsePink {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.4),
+                0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(244, 63, 94, 0.1),
+                0 8px 24px rgba(244, 63, 94, 0.2);
+  }
+}
+
+@keyframes softPulseOrange {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.4),
+                0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(251, 146, 60, 0.1),
+                0 8px 24px rgba(251, 146, 60, 0.2);
+  }
+}
+
+@keyframes softPulseGreen {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(105, 255, 156, 0.4),
+                0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(105, 255, 156, 0.1),
+                0 8px 24px rgba(105, 255, 156, 0.2);
+  }
+}
+
+[data-pulsing="true"][data-glow="purple"] {
+  animation: softPulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+[data-pulsing="true"][data-glow="pink"] {
+  animation: softPulsePink 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+[data-pulsing="true"][data-glow="orange"] {
+  animation: softPulseOrange 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+[data-pulsing="true"][data-glow="green"] {
+  animation: softPulseGreen 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================
+   PROGRESS BAR ANIMATION
+   ============================================ */
+
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--progress-value, 60%);
+  }
+}
+
+[data-progress-bar="true"] {
+  animation: progressFill 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ============================================
+   BADGE GLOW - AI SUGGESTION
+   ============================================ */
+
+@keyframes badgeGlow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4),
+                0 0 16px rgba(16, 185, 129, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.6),
+                0 0 24px rgba(16, 185, 129, 0.3);
+  }
+}
+
+[data-badge="ai-suggestion"] {
+  animation: badgeGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================
+   MENU ITEM HOVER - SIDEBAR
+   ============================================ */
+
+[data-menu-item="true"] {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+[data-menu-item="true"]:hover {
+  transform: translateX(4px);
+}
+
+[data-menu-item="active"] {
+  animation: softPulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================
+   MASCOT ANIMATIONS
+   ============================================ */
+
+@keyframes softBounce {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.05);
+  }
+}
+
+@keyframes happyBounce {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  25% {
+    transform: translateY(-12px) scale(1.08);
+  }
+  50% {
+    transform: translateY(0px) scale(1);
+  }
+  75% {
+    transform: translateY(-12px) scale(1.08);
+  }
+}
+
+@keyframes spinAndSparkle {
+  0% {
+    transform: rotate(0deg) scale(1);
     opacity: 1;
-    transform: none;
   }
+  100% {
+    transform: rotate(360deg) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+[data-mascot="idle"] {
+  animation: softBounce 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+[data-mascot="happy"] {
+  animation: happyBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+[data-mascot="celebrate"] {
+  animation: spinAndSparkle 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ============================================
+   CHILD MODE TRANSITION
+   ============================================ */
+
+@keyframes childModeTransition {
+  from {
+    opacity: 0.95;
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+[data-child-mode="true"] {
+  animation: childModeTransition 0.6s ease-out forwards;
+}
+
+/* ============================================
+   ICON MOVEMENT ON CARD HOVER
+   ============================================ */
+
+@keyframes iconSlideRight {
+  from {
+    transform: translateX(0px);
+  }
+  to {
+    transform: translateX(6px);
+  }
+}
+
+[data-card="activity"] [data-icon-motion="true"] {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-card="activity"]:hover [data-icon-motion="true"] {
+  animation: iconSlideRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* Custom scrollbar styling */
@@ -121,5 +378,293 @@
   
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(105, 255, 156, 0.4);
+  }
+}
+/* ============================================
+   GLOW EFFECTS FOR COLORED CARDS
+   ============================================ */
+
+[data-glow="purple"]:hover {
+  box-shadow: 
+    0 4px 20px rgba(139, 92, 246, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-glow="pink"]:hover {
+  box-shadow: 
+    0 4px 20px rgba(244, 63, 94, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-glow="orange"]:hover {
+  box-shadow: 
+    0 4px 20px rgba(251, 146, 60, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-glow="green"]:hover {
+  box-shadow: 
+    0 4px 20px rgba(105, 255, 156, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-glow="blue"]:hover {
+  box-shadow: 
+    0 4px 20px rgba(59, 130, 246, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-glow="yellow"]:hover {
+  box-shadow: 
+    0 4px 20px rgba(234, 179, 8, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================
+   CHILD MODE STYLES
+   ============================================ */
+
+body[data-child-mode="true"] {
+  --child-mode-enabled: true;
+}
+
+[data-child-mode-container="true"] {
+  border-radius: 24px !important;
+}
+
+[data-child-mode-text="true"] {
+  font-size: 1.1em !important;
+  letter-spacing: 0.3px;
+}
+
+[data-child-mode-shadow="true"] {
+  box-shadow: 
+    0 0 20px rgba(139, 92, 246, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Pastel background transition for child mode */
+@keyframes pastelBgIn {
+  from {
+    filter: hue-rotate(0deg) saturate(1);
+  }
+  to {
+    filter: hue-rotate(-10deg) saturate(1.3);
+  }
+}
+
+[data-child-mode-bg="true"] {
+  animation: pastelBgIn 0.8s ease-out forwards;
+}
+
+/* ============================================
+   SMOOTH TRANSITIONS FOR INTERACTIVE ELEMENTS
+   ============================================ */
+
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-interactive="true"] {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-interactive="true"]:active {
+  transform: scale(0.97) !important;
+}
+
+/* Enhanced hover lift for cards */
+[data-card="activity"]:hover,
+[data-card="hero"]:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-card="activity"]:active,
+[data-card="hero"]:active {
+  transform: translateY(-2px) scale(0.98) !important;
+  transition: all 0.15s ease-out;
+}
+
+/* Icon motion on hover */
+[data-icon-motion="true"] {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-card="activity"]:hover [data-icon-motion="true"] {
+  transform: scale(1.15) rotate(5deg);
+}
+
+/* Confetti animation for mission complete */
+@keyframes confettiFall {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(400px) rotate(360deg);
+  }
+}
+
+[data-confetti="true"] {
+  animation: confettiFall 1.5s ease-out forwards;
+}
+
+/* Streak fire animation */
+@keyframes fireFlicker {
+  0%, 100% {
+    transform: scale(1) rotate(-3deg);
+    filter: brightness(1);
+  }
+  25% {
+    transform: scale(1.1) rotate(3deg);
+    filter: brightness(1.2);
+  }
+  50% {
+    transform: scale(1.05) rotate(-2deg);
+    filter: brightness(0.9);
+  }
+  75% {
+    transform: scale(1.15) rotate(2deg);
+    filter: brightness(1.1);
+  }
+}
+
+[data-streak="active"] {
+  animation: fireFlicker 1.5s ease-in-out infinite;
+}
+
+/* AI badge pulse glow */
+@keyframes aiPulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.6), 0 0 30px rgba(167, 139, 250, 0.4);
+    transform: scale(1.05);
+  }
+}
+
+[data-ai-glow="true"] {
+  animation: aiPulse 2.5s ease-in-out infinite;
+}
+
+/* Progress bar smooth fill */
+@keyframes progressFillSmooth {
+  from {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  to {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+[data-progress-smooth="true"] {
+  animation: progressFillSmooth 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Mascot bounce on click */
+@keyframes mascotBounce {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-20px);
+  }
+  50% {
+    transform: translateY(-15px) rotate(5deg);
+  }
+  70% {
+    transform: translateY(-5px) rotate(-3deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+[data-mascot-bounce="true"] {
+  animation: mascotBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Mini stat card entrance */
+@keyframes statCardPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  60% {
+    transform: scale(1.05) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+[data-stat-card="true"] {
+  animation: statCardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+[data-stat-card="true"]:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+[data-stat-card="true"]:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+[data-stat-card="true"]:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* ============================================
+   CUSTOM FOCUS STATES
+   ============================================ */
+
+*:focus-visible {
+  outline: 2px solid rgba(105, 255, 156, 0.6);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  [data-animate="fade-in"],
+  [data-animate="scale-pop"],
+  [data-animate="slide-left"],
+  [data-animate="slide-right"],
+  [data-progress-bar="true"],
+  [data-mascot="idle"],
+  [data-mascot="happy"],
+  [data-mascot="celebrate"],
+  [data-menu-item="active"],
+  [data-pulsing="true"] {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
   }
 }

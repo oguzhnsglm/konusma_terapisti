@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
+import { useMascot } from '../context/MascotContext';
 
 type Mode = 'child' | 'parent';
 
 export default function ModeSwitch() {
   const [mode, setMode] = useState<Mode>('child');
   const { isDark } = useTheme();
+  const { celebrate } = useMascot();
 
   const toggle = () => {
-    setMode((prev) => (prev === 'child' ? 'parent' : 'child'));
+    const newMode = mode === 'child' ? 'parent' : 'child';
+    setMode(newMode);
+    
+    // Trigger mascot reaction when switching to child mode
+    if (newMode === 'child') {
+      setTimeout(() => {
+        celebrate('celebrate');
+      }, 300);
+    }
   };
 
   return (
@@ -23,6 +33,7 @@ export default function ModeSwitch() {
         },
         pressed && styles.pressed,
       ]}
+      data-interactive="true"
     >
       <Text style={[styles.label, { color: isDark ? '#f2f6ff' : '#1f1b3a' }]}>
         {mode === 'child' ? 'Çocuk Modu' : 'Veli Modu'}

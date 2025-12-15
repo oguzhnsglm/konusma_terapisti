@@ -1,14 +1,59 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text, View, Easing } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, StyleSheet, Text, View, Easing, Pressable } from 'react-native';
 import Svg, { Ellipse, LinearGradient, Stop, Path, Circle, Defs, Line } from 'react-native-svg';
 import { useMascot } from '../context/MascotContext';
 
 export default function Mascot() {
   const { isVisible, message, isCelebrating } = useMascot();
+  const [isHovered, setIsHovered] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const scale = useRef(new Animated.Value(1)).current;
   const glow = useRef(new Animated.Value(0)).current;
   const float = useRef(new Animated.Value(0)).current;
   const rotate = useRef(new Animated.Value(0)).current;
+  const bounceAnim = useRef(new Animated.Value(0)).current;
+  const tooltipOpacity = useRef(new Animated.Value(0)).current;
+
+  const encouragementMessages = [
+    "Bugün çok iyi gidiyorsun!",
+    "Bir görev daha denemek ister misin?",
+    "Harikasın! Devam et!",
+    "Sen gerçekten süpersin!",
+  ];
+
+  const handleMascotPress = () => {
+    // Zıplama animasyonu
+    Animated.sequence([
+      Animated.timing(bounceAnim, {
+        toValue: -20,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(bounceAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Random mesaj göster
+    const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+    setShowTooltip(true);
+
+    Animated.sequence([
+      Animated.timing(tooltipOpacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.delay(2500),
+      Animated.timing(tooltipOpacity, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setShowTooltip(false));
+  };
 
   // Sürekli hafif yüzme animasyonu
   useEffect(() => {
@@ -81,37 +126,55 @@ export default function Mascot() {
   });
 
   return (
-    <View style={styles.container} pointerEvents="none">
+    <View style={styles.container} pointerEvents="box-none">
       {isVisible && (
-        <Animated.View style={[
-          styles.bubble,
-          {
-            transform: [{ scale: scale.interpolate({ inputRange: [1, 1.15], outputRange: [1, 1.05] }) }],
-          },
-        ]}>
+        <Animated.View 
+          style={[
+            styles.bubble,
+            {
+              transform: [{ scale: scale.interpolate({ inputRange: [1, 1.15], outputRange: [1, 1.05] }) }],
+            },
+          ]}
+          data-mascot="celebrate"
+        >
           <Text style={styles.message}>{message || 'Harika gidiyorsun!'}</Text>
         </Animated.View>
       )}
-      <Animated.View
-        style={[
-          styles.avatar,
-          {
-            transform: [
-              { translateY: floatY },
-              { rotate: rotateZ },
-              { scale },
-            ],
-            shadowOpacity: glow.interpolate({ inputRange: [0, 1], outputRange: [0.25, 0.45] }),
-          },
-        ]}
+      
+      {showTooltip && (
+        <Animated.View style={[styles.tooltip, { opacity: tooltipOpacity }]}>
+          <Text style={styles.tooltipText}>
+            {encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)]}
+          </Text>
+        </Animated.View>
+      )}
+
+      <Pressable
+        onPress={handleMascotPress}
+        onHoverIn={() => setIsHovered(true)}
+        onHoverOut={() => setIsHovered(false)}
       >
-        <MascotShape />
-      </Animated.View>
+        <Animated.View
+          style={[
+            styles.avatar,
+            {
+              transform: [
+                { translateY: Animated.add(floatY, bounceAnim) },
+                { rotate: rotateZ },
+                { scale: isHovered ? 1.1 : scale },
+              ],
+              shadowOpacity: glow.interpolate({ inputRange: [0, 1], outputRange: [0.25, 0.45] }),
+            },
+          ]}
+        >
+          <MascotShape isWinking={isHovered} />
+        </Animated.View>
+      </Pressable>
     </View>
   );
 }
 
-function MascotShape() {
+function MascotShape({ isWinking }: { isWinking: boolean }) {
   return (
     <Svg width={120} height={120} viewBox="0 0 100 100">
       <Defs>
@@ -130,11 +193,20 @@ function MascotShape() {
       <Ellipse cx="32" cy="58" rx="9" ry="7" fill="url(#cheekGradient)" opacity={0.8} />
       <Ellipse cx="68" cy="58" rx="9" ry="7" fill="url(#cheekGradient)" opacity={0.8} />
 
-      <Ellipse cx="40" cy="48" rx="6" ry="7" fill="#1F2937" />
+      {/* Sol göz - göz kırparsa çizgi, yoksa normal */}
+      {isWinking ? (
+        <Path d="M 35 48 Q 40 50 45 48" fill="none" stroke="#1F2937" strokeWidth={3} strokeLinecap="round" />
+      ) : (
+        <>
+          <Ellipse cx="40" cy="48" rx="6" ry="7" fill="#1F2937" />
+          <Circle cx="42" cy="46" r="2.5" fill="#fff" opacity={0.95} />
+          <Circle cx="38" cy="49" r="1.5" fill="#fff" opacity={0.6} />
+        </>
+      )}
+
+      {/* Sağ göz - normal */}
       <Ellipse cx="60" cy="48" rx="6" ry="7" fill="#1F2937" />
-      <Circle cx="42" cy="46" r="2.5" fill="#fff" opacity={0.95} />
       <Circle cx="62" cy="46" r="2.5" fill="#fff" opacity={0.95} />
-      <Circle cx="38" cy="49" r="1.5" fill="#fff" opacity={0.6} />
       <Circle cx="58" cy="49" r="1.5" fill="#fff" opacity={0.6} />
 
       <Path d="M 35 63 Q 50 73 65 63" fill="none" stroke="#1F2937" strokeWidth={3.5} strokeLinecap="round" />
@@ -156,6 +228,7 @@ const styles = StyleSheet.create({
     bottom: 16,
     alignItems: 'flex-end',
     gap: 10,
+    zIndex: 1000,
   },
   bubble: {
     backgroundColor: 'rgba(255,255,255,0.95)',
@@ -173,6 +246,26 @@ const styles = StyleSheet.create({
     color: '#2f1b4e',
     fontWeight: '700',
   },
+  tooltip: {
+    backgroundColor: 'rgba(124, 58, 237, 0.95)',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    shadowColor: '#7c3aed',
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 8,
+    maxWidth: 240,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  tooltipText: {
+    color: '#ffffff',
+    fontWeight: '700',
+    fontSize: 14,
+    textAlign: 'center',
+  },
   avatar: {
     width: 96,
     height: 96,
@@ -184,5 +277,6 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     shadowOffset: { width: 0, height: 8 },
     elevation: 8,
+    cursor: 'pointer',
   },
 });

@@ -4,6 +4,11 @@ import { Href, useRouter } from 'expo-router';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
 import ModeSwitch from '../components/ModeSwitch';
+import DailyTaskCard from '../components/DailyTaskCard';
+import AIBadge from '../components/AIBadge';
+import TodaysMissionCard from '../components/TodaysMissionCard';
+import AISuggestionCard from '../components/AISuggestionCard';
+import MiniStatCards from '../components/MiniStatCards';
 import { useAudio } from '../context/AudioContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMascot } from '../context/MascotContext';
@@ -402,6 +407,7 @@ export default function HomePage() {
                     styles.statCard,
                     { backgroundColor: palette.statBg, borderColor: palette.statBorder },
                   ]}
+                  data-animate="fade-in"
                 >
                   <View style={[styles.statIcon, { backgroundColor: palette.statIconBg }]}>
                     <Ionicons
@@ -415,6 +421,15 @@ export default function HomePage() {
                 </View>
               ))}
             </View>
+
+            <TodaysMissionCard 
+              theme={theme}
+              onComplete={() => celebrate('achievement')}
+            />
+
+            <AISuggestionCard theme={theme} />
+
+            <MiniStatCards theme={theme} />
 
             <View style={styles.sectionHeader}>
               <Text style={[styles.sectionTitle, { color: palette.textPrimary }]}>Tüm Aktiviteler</Text>
@@ -458,6 +473,8 @@ function SidebarButton({ item, palette, onPress }: { item: NavItem; palette: Pal
         !item.active && isHovered && { backgroundColor: palette.translucentPanel, transform: [{ translateY: -1 }] },
         pressed && styles.pressedScale,
       ]}
+      data-menu-item="true"
+      data-menu-item-active={item.active ? 'active' : undefined}
     >
       <Ionicons
         name={item.icon}
@@ -590,10 +607,16 @@ function HeroCard({ tile, palette, onPress }: { tile: HeroTile; palette: Palette
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
       style={({ pressed }) => [
-        styles.heroCard, 
-        isHovered && { transform: [{ translateY: -4 }] },
-        pressed && styles.pressedScale
+        styles.heroCard,
+        isHovered && { 
+          transform: [{ translateY: -6 }, { scale: 1.04 }],
+          transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        },
+        pressed && { transform: [{ translateY: -2 }, { scale: 0.98 }] }
       ]}
+      data-animate="fade-in"
+      data-glow={tile.glow}
+      data-card="hero"
     >
       <LinearGradient
         colors={tile.gradient}
@@ -609,9 +632,19 @@ function HeroCard({ tile, palette, onPress }: { tile: HeroTile; palette: Palette
         <Text style={styles.heroCardSubtitle}>{tile.subtitle}</Text>
         <View style={[
           styles.heroCardFooter,
-          isHovered && { borderColor: 'rgba(255,255,255,0.7)' }
+          isHovered && { 
+            borderColor: 'rgba(255,255,255,0.8)',
+            transform: [{ translateX: 4 }],
+          }
         ]}>
-          <Ionicons name="arrow-forward" size={18} color="#ffffff" />
+          <Ionicons 
+            name="arrow-forward" 
+            size={18} 
+            color="#ffffff"
+            style={{
+              transform: isHovered ? [{ translateX: 3 }] : [{ translateX: 0 }],
+            }}
+          />
         </View>
       </LinearGradient>
     </Pressable>
@@ -620,6 +653,7 @@ function HeroCard({ tile, palette, onPress }: { tile: HeroTile; palette: Palette
 
 function ActivityCardView({ activity, palette, onPress }: { activity: ActivityCard; palette: Palette; onPress: () => void }) {
   const [isHovered, setIsHovered] = React.useState(false);
+  const shouldShowAIBadge = activity.id === 'word-fill-game'; // Add AI badge to letter monster game
   
   return (
     <Pressable
@@ -632,17 +666,31 @@ function ActivityCardView({ activity, palette, onPress }: { activity: ActivityCa
           backgroundColor: palette.activityBg,
           borderColor: isHovered ? palette.cardBorder : palette.activityBorder,
         },
-        isHovered && { transform: [{ translateY: -2 }], ...styles.shadowMd },
+        isHovered && { 
+          transform: [{ translateY: -5 }, { scale: 1.05 }],
+          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+        },
         !isHovered && styles.shadowSm,
-        pressed && styles.pressedScale,
+        pressed && { transform: [{ translateY: -2 }, { scale: 0.98 }] },
       ]}
+      data-animate="fade-in"
+      data-card="activity"
     >
+      {shouldShowAIBadge && <AIBadge soundType="R sesi" position="top-right" />}
       <View style={[
         styles.activityIcon, 
         { backgroundColor: activity.accent },
-        isHovered && { opacity: 0.95 }
+        isHovered && { 
+          opacity: 1,
+          transform: [{ scale: 1.1 }, { rotate: '5deg' }],
+        }
       ]}>
-        <Ionicons name={activity.icon} size={18} color="#05070f" />
+        <Ionicons 
+          name={activity.icon} 
+          size={18} 
+          color="#05070f"
+          data-icon-motion="true"
+        />
       </View>
       <View style={styles.activityText}>
         <Text style={[styles.activityTitle, { color: palette.textPrimary }]}>{activity.title}</Text>
@@ -650,7 +698,15 @@ function ActivityCardView({ activity, palette, onPress }: { activity: ActivityCa
           {activity.subtitle}
         </Text>
       </View>
-      <Feather name="chevron-right" size={18} color="#6f7391" />
+      <Feather 
+        name="chevron-right" 
+        size={18} 
+        color="#6f7391"
+        data-icon-motion="true"
+        style={{
+          transform: isHovered ? [{ translateX: 4 }] : [{ translateX: 0 }],
+        }}
+      />
     </Pressable>
   );
 }

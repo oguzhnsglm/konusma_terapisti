@@ -1,35 +1,51 @@
-import React, { useState } from 'react';
+import { View, Text, Pressable, ScrollView, StyleSheet, TextInput, Switch } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Switch, Text, View, TextInput } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import { useProgress } from '../context/ProgressContext';
+import { useState } from 'react';
 
-const AVATARS = ['🧒', '👧', '👦', '🧑', '👨', '👩', '🤖', '👽'];
+const AVATARS = ['👦', '👧', '🧒', '👶', '🐶', '🐱', '🦊', '🐻', '🐼', '🐨', '🦁', '🐯'];
 
 const ACCESSORIES = [
-  { id: 'hat1', emoji: '🎩', name: 'Silindir Şapka', price: 10 },
-  { id: 'hat2', emoji: '🧢', name: 'Beyzbol Şapkası', price: 10 },
-  { id: 'glasses', emoji: '😎', name: 'Güneş Gözlüğü', price: 15 },
-  { id: 'crown', emoji: '👑', name: 'Taç', price: 25 },
-  { id: 'ribbon', emoji: '🎀', name: 'Kurdele', price: 15 },
-  { id: 'bowtie', emoji: '🎗️', name: 'Papyon', price: 20 },
+  { id: 'hat', emoji: '🎩', name: 'Şapka', price: 50 },
+  { id: 'glasses', emoji: '🕶️', name: 'Gözlük', price: 30 },
+  { id: 'crown', emoji: '👑', name: 'Taç', price: 100 },
+  { id: 'mask', emoji: '🎭', name: 'Maske', price: 40 },
+  { id: 'bow', emoji: '🎀', name: 'Fiyonk', price: 25 },
+  { id: 'star', emoji: '⭐', name: 'Yıldız', price: 60 },
 ];
 
 export default function SettingsPage() {
-  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const { progress, setAvatarId, setAvatarName, addAccessory } = useProgress();
-  const [editingName, setEditingName] = useState(progress.avatar.name);
+  const [editingName, setEditingName] = useState(progress.avatar.name || 'İsim Yok');
   const [tempName, setTempName] = useState(editingName);
+  const [notifications, setNotifications] = useState(true);
+  const [soundEffects, setSoundEffects] = useState(true);
+  const [autoSave, setAutoSave] = useState(true);
+  const [hapticFeedback, setHapticFeedback] = useState(false);
 
-  const bgColor = theme === 'dark' ? '#05070f' : '#fefefe';
-  const cardColor = theme === 'dark' ? 'rgba(255,255,255,0.06)' : '#ffffff';
-  const textPrimary = theme === 'dark' ? '#f5f7ff' : '#111323';
-  const textSecondary = theme === 'dark' ? '#d5dbff' : '#606481';
-  const borderColor = theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(15,23,42,0.1)';
-  const accentColor = '#a78bfa';
+  const palette = theme === 'dark' ? {
+    bg: ['#05070f', '#070d19'],
+    card: '#0d1424',
+    cardBorder: '#1a2235',
+    textPrimary: '#f0f4ff',
+    textSecondary: '#cbd5f0',
+    textMuted: '#6b7ba0',
+    accent: '#7c3aed',
+    accentSecondary: '#f97316',
+  } : {
+    bg: ['#fefefe', '#f7f9ff'],
+    card: '#ffffff',
+    cardBorder: '#e4e8f5',
+    textPrimary: '#0a1028',
+    textSecondary: '#334155',
+    textMuted: '#64748b',
+    accent: '#7c3aed',
+    accentSecondary: '#f97316',
+  };
 
   const handleSaveName = () => {
     setAvatarName(tempName);
@@ -39,66 +55,91 @@ export default function SettingsPage() {
   const totalStars = progress.achievements.reduce((sum, a) => sum + a.starsEarned, 0);
 
   return (
-    <LinearGradient
-      colors={theme === 'dark' ? ['#05070f', '#070d19'] : ['#fefefe', '#f7f9ff']}
-      style={styles.screen}
-    >
+    <LinearGradient colors={palette.bg} style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Pressable onPress={() => router.push('/')} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={24} color={accentColor} />
+        
+        {/* Modern Header */}
+        <View style={styles.modernHeader}>
+          <Pressable 
+            onPress={() => router.push('/')} 
+            style={[styles.modernBackBtn, { backgroundColor: palette.card, borderColor: palette.cardBorder }]}
+          >
+            <Ionicons name="arrow-back" size={22} color={palette.accent} />
           </Pressable>
-          <Text style={[styles.title, { color: textPrimary }]}>Profil & Ayarlar</Text>
+          <View style={styles.headerText}>
+            <Text style={[styles.headerTitle, { color: palette.textPrimary }]}>Ayarlar</Text>
+            <Text style={[styles.headerSubtitle, { color: palette.textMuted }]}>Profil & Tercihler</Text>
+          </View>
         </View>
 
-        {/* Avatar Card */}
-        <View style={[styles.avatarCard, { backgroundColor: cardColor, borderColor }]}>
-          <Text style={[styles.cardTitle, { color: textPrimary }]}>Senin Avatar</Text>
-
-          <View style={styles.avatarDisplay}>
-            <Text style={styles.avatarEmoji}>{progress.avatar.avatarId}</Text>
-            {progress.avatar.accessories.length > 0 && (
-              <View style={styles.accessoriesDisplay}>
-                {progress.avatar.accessories.map((acc) => (
-                  <Text key={acc} style={styles.accessoryEmoji}>
-                    {ACCESSORIES.find((a) => a.id === acc)?.emoji || ''}
-                  </Text>
-                ))}
+        {/* Profile Hero Card */}
+        <View style={[styles.heroCard, { backgroundColor: palette.card, borderColor: palette.cardBorder }]}>
+          <View style={styles.avatarSection}>
+            <View style={[styles.avatarCircle, { borderColor: palette.accent }]}>
+              <Text style={styles.heroAvatar}>{progress.avatar.avatarId}</Text>
+              {progress.avatar.accessories.length > 0 && (
+                <View style={styles.heroAccessories}>
+                  {progress.avatar.accessories.slice(0, 2).map((acc) => (
+                    <Text key={acc} style={styles.heroAccessoryIcon}>
+                      {ACCESSORIES.find((a) => a.id === acc)?.emoji || ''}
+                    </Text>
+                  ))}
+                </View>
+              )}
+            </View>
+            <View style={styles.heroInfo}>
+              {editingName === tempName ? (
+                <>
+                  <Text style={[styles.heroName, { color: palette.textPrimary }]}>{editingName}</Text>
+                  <Pressable 
+                    onPress={() => setTempName(editingName)}
+                    style={[styles.editNameBtn, { backgroundColor: palette.accent + '20' }]}
+                  >
+                    <Ionicons name="pencil" size={14} color={palette.accent} />
+                    <Text style={[styles.editNameText, { color: palette.accent }]}>Düzenle</Text>
+                  </Pressable>
+                </>
+              ) : (
+                <View style={[styles.nameEditContainer, { backgroundColor: palette.cardBorder }]}>
+                  <TextInput
+                    value={tempName}
+                    onChangeText={setTempName}
+                    placeholder="Adını gir..."
+                    placeholderTextColor={palette.textMuted}
+                    style={[styles.nameInput, { color: palette.textPrimary }]}
+                  />
+                  <Pressable 
+                    onPress={handleSaveName}
+                    style={[styles.saveNameBtn, { backgroundColor: palette.accent }]}
+                  >
+                    <Ionicons name="checkmark" size={18} color="#fff" />
+                  </Pressable>
+                </View>
+              )}
+              <View style={styles.statsRow}>
+                <View style={styles.statBadge}>
+                  <Text style={styles.statEmoji}>⭐</Text>
+                  <Text style={[styles.statText, { color: palette.textSecondary }]}>{totalStars}</Text>
+                </View>
+                <View style={styles.statBadge}>
+                  <Text style={styles.statEmoji}>🎮</Text>
+                  <Text style={[styles.statText, { color: palette.textSecondary }]}>{progress.achievements.length}</Text>
+                </View>
+                <View style={styles.statBadge}>
+                  <Text style={styles.statEmoji}>🔥</Text>
+                  <Text style={[styles.statText, { color: palette.textSecondary }]}>{progress.dailyStats.length}</Text>
+                </View>
               </View>
-            )}
-          </View>
-
-          {/* Name Editor */}
-          <View style={styles.nameSection}>
-            <Text style={[styles.label, { color: textSecondary }]}>Senin Adın</Text>
-            {editingName === tempName ? (
-              <View style={styles.nameDisplay}>
-                <Text style={[styles.nameText, { color: textPrimary }]}>{editingName}</Text>
-                <Pressable onPress={() => setTempName(editingName)} style={styles.editBtn}>
-                  <Ionicons name="pencil" size={16} color={accentColor} />
-                </Pressable>
-              </View>
-            ) : (
-              <View style={[styles.nameInput, { backgroundColor: borderColor, borderColor }]}>
-                <TextInput
-                  value={tempName}
-                  onChangeText={setTempName}
-                  placeholder="Adını gir..."
-                  placeholderTextColor={textSecondary}
-                  style={[styles.input, { color: textPrimary }]}
-                />
-                <Pressable onPress={handleSaveName} style={styles.checkBtn}>
-                  <Ionicons name="checkmark" size={18} color={accentColor} />
-                </Pressable>
-              </View>
-            )}
+            </View>
           </View>
         </View>
 
         {/* Avatar Selection */}
-        <View style={[styles.section, { backgroundColor: cardColor, borderColor, borderWidth: 1, padding: 16, borderRadius: 16 }]}>
-          <Text style={[styles.cardTitle, { color: textPrimary }]}>Avatar Seç</Text>
+        <View style={[styles.settingsSection, { backgroundColor: palette.card, borderColor: palette.cardBorder }]}>
+          <View style={styles.sectionHeader}>
+            <Ionicons name="person-circle-outline" size={22} color={palette.accent} />
+            <Text style={[styles.sectionTitle, { color: palette.textPrimary }]}>Avatar Seç</Text>
+          </View>
           <View style={styles.avatarGrid}>
             {AVATARS.map((avatar) => (
               <Pressable
@@ -106,261 +147,541 @@ export default function SettingsPage() {
                 onPress={() => setAvatarId(avatar)}
                 style={({ pressed }) => [
                   styles.avatarOption,
-                  { backgroundColor: progress.avatar.avatarId === avatar ? accentColor + '40' : borderColor },
-                  progress.avatar.avatarId === avatar && { borderColor: accentColor, borderWidth: 2 },
-                  pressed && { opacity: 0.7 },
+                  { 
+                    backgroundColor: progress.avatar.avatarId === avatar ? palette.accent + '30' : palette.cardBorder,
+                    borderColor: progress.avatar.avatarId === avatar ? palette.accent : 'transparent',
+                  },
+                  pressed && styles.pressed,
                 ]}
               >
                 <Text style={styles.avatarOptionEmoji}>{avatar}</Text>
+                {progress.avatar.avatarId === avatar && (
+                  <View style={[styles.selectedBadge, { backgroundColor: palette.accent }]}>
+                    <Ionicons name="checkmark" size={12} color="#fff" />
+                  </View>
+                )}
               </Pressable>
             ))}
           </View>
         </View>
 
-        {/* Accessories */}
-        <View style={[styles.section, { backgroundColor: cardColor, borderColor, borderWidth: 1, padding: 16, borderRadius: 16 }]}>
-          <View style={styles.accessoryHeader}>
-            <Text style={[styles.cardTitle, { color: textPrimary }]}>Aksesuarlar</Text>
-            <Text style={[styles.starCount, { color: '#fbbf24' }]}>⭐ {totalStars}</Text>
+        {/* Accessories Shop */}
+        <View style={[styles.settingsSection, { backgroundColor: palette.card, borderColor: palette.cardBorder }]}>
+          <View style={styles.sectionHeader}>
+            <Ionicons name="sparkles-outline" size={22} color={palette.accentSecondary} />
+            <Text style={[styles.sectionTitle, { color: palette.textPrimary }]}>Aksesuar Mağazası</Text>
+            <View style={[styles.starBadge, { backgroundColor: '#fbbf24' + '20' }]}>
+              <Text style={styles.starIcon}>⭐</Text>
+              <Text style={[styles.starCount, { color: '#fbbf24' }]}>{totalStars}</Text>
+            </View>
           </View>
           <View style={styles.accessoriesGrid}>
             {ACCESSORIES.map((acc) => {
               const isOwned = progress.avatar.accessories.includes(acc.id);
-              const isEquipped = progress.avatar.accessories.includes(acc.id);
+              const canAfford = totalStars >= acc.price;
 
               return (
                 <Pressable
                   key={acc.id}
-                  onPress={() => !isOwned && totalStars >= acc.price && addAccessory(acc.id)}
+                  onPress={() => !isOwned && canAfford && addAccessory(acc.id)}
+                  disabled={isOwned || !canAfford}
                   style={({ pressed }) => [
                     styles.accessoryCard,
-                    { backgroundColor: cardColor, borderColor },
-                    isOwned && { borderColor: accentColor, borderWidth: 2 },
-                    !isOwned && totalStars < acc.price && { opacity: 0.5 },
-                    pressed && { opacity: 0.8 },
+                    { 
+                      backgroundColor: isOwned ? palette.accent + '20' : palette.cardBorder,
+                      borderColor: isOwned ? palette.accent : 'transparent',
+                      opacity: !isOwned && !canAfford ? 0.4 : 1,
+                    },
+                    pressed && !isOwned && canAfford && styles.pressed,
                   ]}
                 >
-                  <Text style={styles.accessoryEmoji}>{acc.emoji}</Text>
-                  <Text style={[styles.accessoryName, { color: textPrimary }]}>{acc.name}</Text>
-                  <Text style={[styles.accessoryPrice, { color: textSecondary }]}>
-                    {isOwned ? '✓ Sahip' : `⭐ ${acc.price}`}
+                  <Text style={styles.accessoryIcon}>{acc.emoji}</Text>
+                  <Text style={[styles.accessoryName, { color: palette.textPrimary }]} numberOfLines={1}>
+                    {acc.name}
                   </Text>
+                  <View style={[styles.accessoryPriceTag, { 
+                    backgroundColor: isOwned ? palette.accent : '#fbbf24' + '20' 
+                  }]}>
+                    {isOwned ? (
+                      <Ionicons name="checkmark-circle" size={14} color="#fff" />
+                    ) : (
+                      <>
+                        <Text style={styles.priceIcon}>⭐</Text>
+                        <Text style={[styles.priceText, { color: '#fbbf24' }]}>{acc.price}</Text>
+                      </>
+                    )}
+                  </View>
                 </Pressable>
               );
             })}
           </View>
         </View>
 
-        {/* Theme Settings */}
-        <View style={[styles.section, { backgroundColor: cardColor, borderColor, borderWidth: 1, padding: 16, borderRadius: 16 }]}>
-          <Text style={[styles.cardTitle, { color: textPrimary }]}>Tema</Text>
+        {/* Appearance Settings */}
+        <View style={[styles.settingsSection, { backgroundColor: palette.card, borderColor: palette.cardBorder }]}>
+          <View style={styles.sectionHeader}>
+            <Ionicons name="color-palette-outline" size={22} color={palette.accent} />
+            <Text style={[styles.sectionTitle, { color: palette.textPrimary }]}>Görünüm</Text>
+          </View>
           <View style={styles.themeOptions}>
-            <Pressable
-              onPress={() => setTheme('dark')}
-              style={({ pressed }) => [
-                styles.themeBtn,
-                { backgroundColor: theme === 'dark' ? accentColor + '40' : borderColor },
-                theme === 'dark' && { borderColor: accentColor, borderWidth: 2 },
-                pressed && { opacity: 0.7 },
-              ]}
-            >
-              <Ionicons name="moon" size={20} color={accentColor} />
-              <Text style={[styles.themeBtnText, { color: textPrimary }]}>Karanlık</Text>
-            </Pressable>
-
             <Pressable
               onPress={() => setTheme('light')}
               style={({ pressed }) => [
-                styles.themeBtn,
-                { backgroundColor: theme === 'light' ? accentColor + '40' : borderColor },
-                theme === 'light' && { borderColor: accentColor, borderWidth: 2 },
-                pressed && { opacity: 0.7 },
+                styles.themeOption,
+                { 
+                  backgroundColor: theme === 'light' ? palette.accent + '30' : palette.cardBorder,
+                  borderColor: theme === 'light' ? palette.accent : 'transparent',
+                },
+                pressed && styles.pressed,
               ]}
             >
-              <Ionicons name="sunny" size={20} color={accentColor} />
-              <Text style={[styles.themeBtnText, { color: textPrimary }]}>Aydınlık</Text>
+              <Ionicons name="sunny" size={24} color={theme === 'light' ? palette.accent : palette.textMuted} />
+              <Text style={[styles.themeLabel, { color: theme === 'light' ? palette.textPrimary : palette.textMuted }]}>
+                Aydınlık
+              </Text>
+              {theme === 'light' && (
+                <Ionicons name="checkmark-circle" size={20} color={palette.accent} style={styles.themeCheck} />
+              )}
+            </Pressable>
+
+            <Pressable
+              onPress={() => setTheme('dark')}
+              style={({ pressed }) => [
+                styles.themeOption,
+                { 
+                  backgroundColor: theme === 'dark' ? palette.accent + '30' : palette.cardBorder,
+                  borderColor: theme === 'dark' ? palette.accent : 'transparent',
+                },
+                pressed && styles.pressed,
+              ]}
+            >
+              <Ionicons name="moon" size={24} color={theme === 'dark' ? palette.accent : palette.textMuted} />
+              <Text style={[styles.themeLabel, { color: theme === 'dark' ? palette.textPrimary : palette.textMuted }]}>
+                Karanlık
+              </Text>
+              {theme === 'dark' && (
+                <Ionicons name="checkmark-circle" size={20} color={palette.accent} style={styles.themeCheck} />
+              )}
             </Pressable>
           </View>
         </View>
 
-        {/* Stats */}
-        <View style={[styles.statsCard, { backgroundColor: cardColor, borderColor }]}>
-          <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: textSecondary }]}>Oynanan Oyunlar</Text>
-            <Text style={[styles.statValue, { color: '#a78bfa' }]}>{progress.achievements.length}</Text>
+        {/* App Preferences */}
+        <View style={[styles.settingsSection, { backgroundColor: palette.card, borderColor: palette.cardBorder }]}>
+          <View style={styles.sectionHeader}>
+            <Ionicons name="settings-outline" size={22} color={palette.accent} />
+            <Text style={[styles.sectionTitle, { color: palette.textPrimary }]}>Uygulama Tercihleri</Text>
           </View>
-          <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: textSecondary }]}>Öğrenilen Kelimeler</Text>
-            <Text style={[styles.statValue, { color: '#fbbf24' }]}>{progress.dailyStats.reduce((s, d) => s + d.wordsLearned, 0)}</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: textSecondary }]}>Toplam Dakika</Text>
-            <Text style={[styles.statValue, { color: '#34d399' }]}>{progress.dailyStats.reduce((s, d) => s + d.minutesPracticed, 0)}</Text>
+          
+          <View style={styles.preferencesContainer}>
+            <View style={[styles.preferenceItem, { borderBottomColor: palette.cardBorder }]}>
+              <View style={styles.preferenceLeft}>
+                <Ionicons name="notifications-outline" size={20} color={palette.textSecondary} />
+                <View style={styles.preferenceText}>
+                  <Text style={[styles.preferenceTitle, { color: palette.textPrimary }]}>Bildirimler</Text>
+                  <Text style={[styles.preferenceDesc, { color: palette.textMuted }]}>Günlük hatırlatıcılar al</Text>
+                </View>
+              </View>
+              <Switch
+                value={notifications}
+                onValueChange={setNotifications}
+                trackColor={{ false: palette.cardBorder, true: palette.accent + '60' }}
+                thumbColor={notifications ? palette.accent : palette.textMuted}
+              />
+            </View>
+
+            <View style={[styles.preferenceItem, { borderBottomColor: palette.cardBorder }]}>
+              <View style={styles.preferenceLeft}>
+                <Ionicons name="volume-high-outline" size={20} color={palette.textSecondary} />
+                <View style={styles.preferenceText}>
+                  <Text style={[styles.preferenceTitle, { color: palette.textPrimary }]}>Ses Efektleri</Text>
+                  <Text style={[styles.preferenceDesc, { color: palette.textMuted }]}>Oyun seslerini aç/kapat</Text>
+                </View>
+              </View>
+              <Switch
+                value={soundEffects}
+                onValueChange={setSoundEffects}
+                trackColor={{ false: palette.cardBorder, true: palette.accent + '60' }}
+                thumbColor={soundEffects ? palette.accent : palette.textMuted}
+              />
+            </View>
+
+            <View style={[styles.preferenceItem, { borderBottomColor: palette.cardBorder }]}>
+              <View style={styles.preferenceLeft}>
+                <Ionicons name="cloud-upload-outline" size={20} color={palette.textSecondary} />
+                <View style={styles.preferenceText}>
+                  <Text style={[styles.preferenceTitle, { color: palette.textPrimary }]}>Otomatik Kayıt</Text>
+                  <Text style={[styles.preferenceDesc, { color: palette.textMuted }]}>İlerlemeni otomatik kaydet</Text>
+                </View>
+              </View>
+              <Switch
+                value={autoSave}
+                onValueChange={setAutoSave}
+                trackColor={{ false: palette.cardBorder, true: palette.accent + '60' }}
+                thumbColor={autoSave ? palette.accent : palette.textMuted}
+              />
+            </View>
+
+            <View style={[styles.preferenceItem, { borderBottomWidth: 0 }]}>
+              <View style={styles.preferenceLeft}>
+                <Ionicons name="phone-portrait-outline" size={20} color={palette.textSecondary} />
+                <View style={styles.preferenceText}>
+                  <Text style={[styles.preferenceTitle, { color: palette.textPrimary }]}>Dokunsal Geri Bildirim</Text>
+                  <Text style={[styles.preferenceDesc, { color: palette.textMuted }]}>Titreşim ile geri bildirim</Text>
+                </View>
+              </View>
+              <Switch
+                value={hapticFeedback}
+                onValueChange={setHapticFeedback}
+                trackColor={{ false: palette.cardBorder, true: palette.accent + '60' }}
+                thumbColor={hapticFeedback ? palette.accent : palette.textMuted}
+              />
+            </View>
           </View>
         </View>
+
+        {/* About Section */}
+        <View style={[styles.settingsSection, { backgroundColor: palette.card, borderColor: palette.cardBorder }]}>
+          <View style={styles.sectionHeader}>
+            <Ionicons name="information-circle-outline" size={22} color={palette.textSecondary} />
+            <Text style={[styles.sectionTitle, { color: palette.textPrimary }]}>Hakkında</Text>
+          </View>
+          <View style={styles.aboutContainer}>
+            <Pressable style={[styles.aboutItem, { borderBottomColor: palette.cardBorder }]}>
+              <Text style={[styles.aboutLabel, { color: palette.textSecondary }]}>Versiyon</Text>
+              <Text style={[styles.aboutValue, { color: palette.textPrimary }]}>1.0.0</Text>
+            </Pressable>
+            <Pressable style={[styles.aboutItem, { borderBottomColor: palette.cardBorder }]}>
+              <Text style={[styles.aboutLabel, { color: palette.textSecondary }]}>Gizlilik Politikası</Text>
+              <Ionicons name="chevron-forward" size={18} color={palette.textMuted} />
+            </Pressable>
+            <Pressable style={[styles.aboutItem, { borderBottomWidth: 0 }]}>
+              <Text style={[styles.aboutLabel, { color: palette.textSecondary }]}>Kullanım Koşulları</Text>
+              <Ionicons name="chevron-forward" size={18} color={palette.textMuted} />
+            </Pressable>
+          </View>
+        </View>
+
       </ScrollView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1 },
-  content: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 40, gap: 16 },
-  header: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 8 },
-  backBtn: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
-  title: { fontSize: 28, fontWeight: '800', flex: 1 },
-  avatarCard: { borderRadius: 20, padding: 20, gap: 12, borderWidth: 1 },
-  cardTitle: { fontSize: 16, fontWeight: '700' },
-  avatarDisplay: { alignItems: 'center', gap: 8 },
-  avatarEmoji: { fontSize: 64 },
-  accessoriesDisplay: { flexDirection: 'row', gap: 4 },
-  accessoryEmoji: { fontSize: 20 },
-  nameSection: { gap: 8 },
-  label: { fontSize: 12, fontWeight: '600' },
-  nameDisplay: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  nameText: { fontSize: 18, fontWeight: '700', flex: 1 },
-  editBtn: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
-  nameInput: { flexDirection: 'row', alignItems: 'center', borderRadius: 12, paddingHorizontal: 12, gap: 8 },
-  input: { flex: 1, fontSize: 14, fontWeight: '600', paddingVertical: 10 },
-  checkBtn: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
-  section: { gap: 12 },
-  avatarGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  avatarOption: { width: '23%', aspectRatio: 1, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
-  avatarOptionEmoji: { fontSize: 32 },
-  accessoryHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  starCount: { fontSize: 14, fontWeight: '700' },
-  accessoriesGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  accessoryCard: { width: '31%', borderRadius: 12, padding: 12, alignItems: 'center', gap: 6, borderWidth: 1 },
-  accessoryName: { fontSize: 11, fontWeight: '600', textAlign: 'center' },
-  accessoryPrice: { fontSize: 10, fontWeight: '600' },
-  themeOptions: { flexDirection: 'row', gap: 10 },
-  themeBtn: { flex: 1, borderRadius: 12, padding: 12, alignItems: 'center', gap: 8, borderWidth: 1 },
-  themeBtnText: { fontSize: 12, fontWeight: '700' },
-  statsCard: { borderRadius: 16, padding: 16, flexDirection: 'row', gap: 12, borderWidth: 1, marginTop: 8 },
-  statItem: { flex: 1, alignItems: 'center', gap: 4 },
-  statLabel: { fontSize: 11, fontWeight: '600' },
-  statValue: { fontSize: 20, fontWeight: '800' },
   screen: {
     flex: 1,
   },
   content: {
-    padding: 24,
-    gap: 24,
+    padding: 20,
+    paddingBottom: 60,
   },
-  hero: {
+  modernHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    borderRadius: 28,
-    padding: 24,
-    borderWidth: 1,
-  },
-  heroLeft: {
-    flex: 1,
-    gap: 8,
-  },
-  heroLabel: {
-    fontSize: 13,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
-  heroTitle: {
-    fontSize: 26,
-    fontWeight: '800',
-  },
-  heroSubtitle: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  heroBadge: {
-    width: 64,
-    height: 64,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  section: {
+    marginBottom: 24,
     gap: 12,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '800',
+  modernBackBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  sectionSubtitle: {
-    fontSize: 13,
+  headerText: {
+    flex: 1,
   },
-  themeGrid: {
-    flexDirection: 'row',
-    gap: 16,
-    flexWrap: 'wrap',
+  headerTitle: {
+    fontSize: 26,
+    fontWeight: '700',
+    letterSpacing: -0.5,
   },
-  themeCard: {
+  headerSubtitle: {
+    fontSize: 14,
+    marginTop: 2,
+  },
+  heroCard: {
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 20,
+    borderWidth: 1.5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  avatarSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
-    padding: 16,
-    flexBasis: '48%',
-    minWidth: 220,
-    borderRadius: 18,
-    borderWidth: 1,
+    gap: 20,
   },
-  themePreview: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
+  avatarCircle: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 3,
   },
-  themeText: {
-    flex: 1,
+  heroAvatar: {
+    fontSize: 52,
+  },
+  heroAccessories: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: -8,
     gap: 4,
   },
-  themeTitle: {
+  heroAccessoryIcon: {
+    fontSize: 20,
+  },
+  heroInfo: {
+    flex: 1,
+  },
+  heroName: {
+    fontSize: 22,
     fontWeight: '700',
+    marginBottom: 8,
   },
-  themeSubtitle: {
-    fontSize: 12,
+  editNameBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    gap: 4,
+    alignSelf: 'flex-start',
   },
-  themeCheck: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+  editNameText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  nameEditContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 14,
+    padding: 4,
+    gap: 8,
+  },
+  nameInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  saveNameBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  languageRow: {
+  statsRow: {
     flexDirection: 'row',
-    gap: 10,
-    flexWrap: 'wrap',
+    gap: 12,
+    marginTop: 12,
   },
-  langChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 999,
+  statBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0,0,0,0.05)',
   },
-  langChipLabel: {
+  statEmoji: {
+    fontSize: 16,
+  },
+  statText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  settingsSection: {
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    gap: 8,
+  },
+  sectionTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    flex: 1,
+  },
+  starBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 12,
+    gap: 4,
+  },
+  starIcon: {
+    fontSize: 14,
+  },
+  starCount: {
+    fontSize: 14,
     fontWeight: '700',
   },
-  toggleRow: {
+  avatarGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  avatarOption: {
+    width: 66,
+    height: 66,
+    borderRadius: 33,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    position: 'relative',
+  },
+  avatarOptionEmoji: {
+    fontSize: 38,
+  },
+  selectedBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.96 }],
+  },
+  accessoriesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  accessoryCard: {
+    width: 106,
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 2,
+    alignItems: 'center',
+  },
+  accessoryIcon: {
+    fontSize: 32,
+    marginBottom: 6,
+  },
+  accessoryName: {
+    fontSize: 12,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+  accessoryPriceTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    gap: 3,
+  },
+  priceIcon: {
+    fontSize: 11,
+  },
+  priceText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  themeOptions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  themeOption: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 18,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    gap: 8,
+    borderWidth: 2,
+    position: 'relative',
+  },
+  themeLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  themeCheck: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+  },
+  preferencesContainer: {
+    gap: 0,
+  },
+  preferenceItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: 18,
-    padding: 18,
-    borderWidth: 1,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
   },
-  toggleTextBlock: {
+  preferenceLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
     flex: 1,
-    gap: 2,
-    paddingRight: 12,
   },
-  toggleTitle: {
-    fontWeight: '700',
+  preferenceText: {
+    flex: 1,
+  },
+  preferenceTitle: {
     fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 2,
   },
-  toggleSubtitle: {
+  preferenceDesc: {
     fontSize: 12,
   },
-  pressed: {
-    opacity: 0.9,
-    transform: [{ scale: 0.99 }],
+  aboutContainer: {
+    gap: 0,
+  },
+  aboutItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+  },
+  aboutLabel: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  aboutValue: {
+    fontSize: 15,
+    fontWeight: '600',
   },
 });
