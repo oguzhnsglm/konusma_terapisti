@@ -50,6 +50,7 @@ type ProgressContextValue = {
   addWordToday: () => void;
   addSessionToday: () => void;
   addStarsToday: (stars: number) => void;
+  incrementGames: () => void;
   
   // Oyun başarısı
   addAchievement: (gameId: string, difficulty: 'easy' | 'medium' | 'hard', stars: number) => void;
@@ -168,6 +169,10 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     }));
   };
 
+  const incrementGames = () => {
+    addSessionToday();
+  };
+
   const addAchievement = (gameId: string, difficulty: 'easy' | 'medium' | 'hard', stars: number) => {
     const newAchievements = [
       ...progress.achievements,
@@ -241,11 +246,12 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     () => ({
       progress,
       getTodayStats,
-      addMinutesToday,
-      addWordToday,
-      addSessionToday,
-      addStarsToday,
-      addAchievement,
+    addMinutesToday,
+    addWordToday,
+    addSessionToday,
+    addStarsToday,
+    incrementGames,
+    addAchievement,
       setAvatarName,
       setAvatarId,
       addAccessory,

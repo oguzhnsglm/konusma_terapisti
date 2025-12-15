@@ -9,6 +9,7 @@ const quickGames = [
   { title: 'Kafiye Oyunu', route: '/games/rhyme', color: '#5ac8fa' },
   { title: 'Renk Oyunu', route: '/games/colors', color: '#34c759' },
   { title: 'Sayma Oyunu', route: '/games/counting', color: '#ffb347' },
+  { title: 'Söyle - Eşleş - Geç', route: '/games/speak-to-pass', color: '#ff9bd5' },
 ] satisfies { title: string; route: Href; color: string }[];
 
 export default function MiniGamesPage() {
