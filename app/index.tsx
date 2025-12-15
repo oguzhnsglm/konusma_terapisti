@@ -1,18 +1,21 @@
-import React, { ComponentProps, useEffect } from 'react';
+import React, { ComponentProps, useEffect, useState, useRef, useCallback } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Href, useRouter } from 'expo-router';
 import { Ionicons, Feather } from '@expo/vector-icons';
-import { ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
 import ModeSwitch from '../components/ModeSwitch';
 import DailyTaskCard from '../components/DailyTaskCard';
 import AIBadge from '../components/AIBadge';
 import TodaysMissionCard from '../components/TodaysMissionCard';
 import AISuggestionCard from '../components/AISuggestionCard';
 import MiniStatCards from '../components/MiniStatCards';
+import SearchBar from '../components/SearchBar';
+import SearchResultsPanel from '../components/SearchResultsPanel';
 import { useAudio } from '../context/AudioContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMascot } from '../context/MascotContext';
 import { useProgress } from '../context/ProgressContext';
+import { filterSearchResults } from '../data/searchData';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
@@ -280,12 +283,45 @@ export default function HomePage() {
   const { celebrate } = useMascot();
   const palette = palettes[theme];
 
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchDebounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const [searchResults, setSearchResults] = useState({
+    games: [],
+    exercises: [],
+    stories: [],
+    info: [],
+  });
+
   // Sayfa yüklendiğinde maskota hoşgeldin mesajı göster
   useEffect(() => {
     const timer = setTimeout(() => {
       celebrate('default');
     }, 1000);
     return () => clearTimeout(timer);
+  }, []);
+
+  // Search debounce
+  const handleSearchChange = useCallback((text: string) => {
+    setSearchQuery(text);
+    
+    if (searchDebounceTimer.current) {
+      clearTimeout(searchDebounceTimer.current);
+    }
+
+    searchDebounceTimer.current = setTimeout(() => {
+      const results = filterSearchResults(text);
+      setSearchResults(results);
+    }, 250);
+  }, []);
+
+  const handleSearchFocus = useCallback(() => {
+    setIsSearchFocused(true);
+  }, []);
+
+  const handleSearchBlur = useCallback(() => {
+    setIsSearchFocused(false);
   }, []);
 
   const handleNav = (route?: Href, activityId?: string) => {
@@ -365,6 +401,23 @@ export default function HomePage() {
           </View>
 
           <View style={styles.main}>
+            {/* Search Bar Section */}
+            <View style={styles.searchSection}>
+              <SearchBar
+                palette={palette}
+                onFocus={handleSearchFocus}
+                onBlur={handleSearchBlur}
+                value={searchQuery}
+                onChangeText={handleSearchChange}
+              />
+              <SearchResultsPanel
+                palette={palette}
+                results={searchResults}
+                isVisible={isSearchFocused && searchQuery.length > 0}
+                query={searchQuery}
+              />
+            </View>
+
             <View style={styles.headerRow}>
               <View>
                 <Text style={[styles.welcomeLabel, { color: palette.textMuted }]}>Ana Sayfa</Text>
@@ -877,6 +930,9 @@ const styles = StyleSheet.create({
     minWidth: 320,
     maxWidth: 960,
     gap: 24,
+  },
+  searchSection: {
+    gap: 8,
   },
   headerRow: {
     flexDirection: 'row',
