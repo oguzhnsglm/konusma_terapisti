@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import {
   KeyboardAvoidingView,
@@ -18,6 +18,35 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Test amaçlı otomatik giriş
+  useEffect(() => {
+    const testAutoLogin = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (data?.session) {
+          // Zaten giriş yapılmış
+          router.replace('/');
+          return;
+        }
+        // Test hesabı ile giriş
+        setLoading(true);
+        const { error: authError } = await supabase.auth.signInWithPassword({
+          email: 'test@example.com',
+          password: 'test123456',
+        });
+        setLoading(false);
+        if (!authError) {
+          router.replace('/');
+        }
+      } catch (err) {
+        // Hata durumunda giriş ekranını göster
+        setLoading(false);
+      }
+    };
+
+    testAutoLogin();
+  }, []);
 
   const handleLogin = async () => {
     setError(null);

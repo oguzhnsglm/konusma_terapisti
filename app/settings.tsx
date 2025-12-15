@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { useProgress } from '../context/ProgressContext';
+import { useChildMode } from '../context/ChildModeContext';
 import { useState } from 'react';
 
 const AVATARS = ['👦', '👧', '🧒', '👶', '🐶', '🐱', '🦊', '🐻', '🐼', '🐨', '🦁', '🐯'];
@@ -20,6 +21,7 @@ const ACCESSORIES = [
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { progress, setAvatarId, setAvatarName, addAccessory } = useProgress();
+  const { isChildMode } = useChildMode();
   const [editingName, setEditingName] = useState(progress.avatar.name || 'İsim Yok');
   const [tempName, setTempName] = useState(editingName);
   const [notifications, setNotifications] = useState(true);
@@ -27,7 +29,19 @@ export default function SettingsPage() {
   const [autoSave, setAutoSave] = useState(true);
   const [hapticFeedback, setHapticFeedback] = useState(false);
 
-  const palette = theme === 'dark' ? {
+  // Çocuk modu paletleri
+  const childModePalette = {
+    bg: ['#FFE5E5', '#E5F0FF'],
+    card: '#FFFFFF',
+    cardBorder: '#FF6B6B',
+    textPrimary: '#1a1a1a',
+    textSecondary: '#333333',
+    textMuted: '#666666',
+    accent: '#4ECDC4',
+    accentSecondary: '#FFE66D',
+  };
+
+  const normalPalette = theme === 'dark' ? {
     bg: ['#05070f', '#070d19'],
     card: '#0d1424',
     cardBorder: '#1a2235',
@@ -46,6 +60,8 @@ export default function SettingsPage() {
     accent: '#7c3aed',
     accentSecondary: '#f97316',
   };
+
+  const palette = isChildMode ? childModePalette : normalPalette;
 
   const handleSaveName = () => {
     setAvatarName(tempName);
@@ -264,6 +280,27 @@ export default function SettingsPage() {
               )}
             </Pressable>
           </View>
+        </View>
+
+        {/* Security Section */}
+        <View style={[styles.settingsSection, { backgroundColor: palette.card, borderColor: palette.cardBorder }]}>
+          <View style={styles.sectionHeader}>
+            <Ionicons name="lock-closed-outline" size={22} color={palette.accentSecondary} />
+            <Text style={[styles.sectionTitle, { color: palette.textPrimary }]}>Güvenlik</Text>
+          </View>
+          <Pressable 
+            onPress={() => router.push('/settings/change-pin')}
+            style={[styles.securityItem, { borderBottomColor: palette.cardBorder }]}
+          >
+            <View style={styles.securityItemLeft}>
+              <Ionicons name="key-outline" size={20} color={palette.accentSecondary} />
+              <View>
+                <Text style={[styles.securityItemTitle, { color: palette.textPrimary }]}>PIN'i Değiştir</Text>
+                <Text style={[styles.securityItemDesc, { color: palette.textMuted }]}>Çocuk modu PIN'ini güncelle</Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward-outline" size={20} color={palette.textMuted} />
+          </Pressable>
         </View>
 
         {/* App Preferences */}
@@ -683,5 +720,27 @@ const styles = StyleSheet.create({
   aboutValue: {
     fontSize: 15,
     fontWeight: '600',
+  },
+  securityItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    paddingHorizontal: 0,
+    borderBottomWidth: 1,
+  },
+  securityItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  securityItemTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  securityItemDesc: {
+    fontSize: 12,
   },
 });

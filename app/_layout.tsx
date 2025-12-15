@@ -10,6 +10,7 @@ import { ThemeProvider } from '../context/ThemeContext';
 import { AudioProvider } from '../context/AudioContext';
 import { ProgressProvider } from '../context/ProgressContext';
 import { MascotProvider } from '../context/MascotContext';
+import { ChildModeProvider } from '../context/ChildModeContext';
 import Mascot from '../components/Mascot';
 import ReturnHomeButton from '../components/ReturnHomeButton';
 
@@ -22,10 +23,12 @@ export default function RootLayout() {
             <ProgressProvider>
               <PracticeProvider>
                 <MascotProvider>
-                  <StatusBar style="dark" />
-                  <Stack screenOptions={{ headerShown: false }} />
-                  <Mascot />
-                  <ReturnHomeButton />
+                  <ChildModeProvider>
+                    <StatusBar style="dark" />
+                    <Stack screenOptions={{ headerShown: false }} />
+                    <Mascot />
+                    <ReturnHomeButton />
+                  </ChildModeProvider>
                 </MascotProvider>
               </PracticeProvider>
             </ProgressProvider>

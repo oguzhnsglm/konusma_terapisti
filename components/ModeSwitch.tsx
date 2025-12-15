@@ -1,73 +1,81 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
+import { useChildMode } from '../context/ChildModeContext';
 import { useMascot } from '../context/MascotContext';
-
-type Mode = 'child' | 'parent';
+import PinModal from './PinModal';
 
 export default function ModeSwitch() {
-  const [mode, setMode] = useState<Mode>('child');
   const { isDark } = useTheme();
   const { celebrate } = useMascot();
+  const {
+    isChildMode,
+    showPinModal,
+    closePinModal,
+    requestEnableChildMode,
+    requestDisableChildMode,
+  } = useChildMode();
 
-  const toggle = () => {
-    const newMode = mode === 'child' ? 'parent' : 'child';
-    setMode(newMode);
-    
-    // Trigger mascot reaction when switching to child mode
-    if (newMode === 'child') {
-      setTimeout(() => {
-        celebrate('celebrate');
-      }, 300);
+  const handleToggle = () => {
+    if (isChildMode) {
+      // Turning off child mode
+      requestDisableChildMode();
+    } else {
+      // Turning on child mode
+      requestEnableChildMode();
     }
   };
 
   return (
-    <Pressable
-      onPress={toggle}
-      style={({ pressed }) => [
-        styles.container,
-        {
-          backgroundColor: isDark ? 'rgba(9, 13, 23, 0.85)' : 'rgba(255,255,255,0.9)',
-          borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
-        },
-        pressed && styles.pressed,
-      ]}
-      data-interactive="true"
-    >
-      <Text style={[styles.label, { color: isDark ? '#f2f6ff' : '#1f1b3a' }]}>
-        {mode === 'child' ? 'Çocuk Modu' : 'Veli Modu'}
-      </Text>
-      <View
-        style={[
-          styles.switchShell,
+    <>
+      <Pressable
+        onPress={handleToggle}
+        style={({ pressed }) => [
+          styles.container,
           {
-            backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : '#f2e9ff',
+            backgroundColor: isDark ? 'rgba(9, 13, 23, 0.85)' : 'rgba(255,255,255,0.9)',
             borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
           },
-          mode === 'parent' && {
-            backgroundColor: isDark ? 'rgba(104,255,155,0.25)' : '#ffcee8',
-            borderColor: isDark ? 'rgba(104,255,155,0.8)' : 'rgba(255, 159, 211, 0.6)',
-          },
+          pressed && styles.pressed,
         ]}
+        data-interactive="true"
       >
+        <Text style={[styles.label, { color: isDark ? '#f2f6ff' : '#1f1b3a' }]}>
+          {isChildMode ? '👧 Çocuk' : '👨 Veli'}
+        </Text>
         <View
           style={[
-            styles.knob,
+            styles.switchShell,
             {
-              backgroundColor: isDark ? '#0b111d' : '#ffffff',
-              shadowColor: isDark ? '#00000099' : '#c1d5ff',
+              backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : '#f2e9ff',
+              borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
             },
-            mode === 'parent' && [
-              styles.knobOn,
-              {
-                backgroundColor: isDark ? '#69ff9c' : '#ff9fd3',
-              },
-            ],
+            isChildMode && {
+              backgroundColor: isDark ? 'rgba(104,255,155,0.25)' : '#ffcee8',
+              borderColor: isDark ? 'rgba(104,255,155,0.8)' : 'rgba(255, 159, 211, 0.6)',
+            },
           ]}
-        />
-      </View>
-    </Pressable>
+        >
+          <View
+            style={[
+              styles.knob,
+              {
+                backgroundColor: isDark ? '#0b111d' : '#ffffff',
+                shadowColor: isDark ? '#00000099' : '#c1d5ff',
+              },
+              isChildMode && [
+                styles.knobOn,
+                {
+                  backgroundColor: isDark ? '#69ff9c' : '#ff9fd3',
+                },
+              ],
+            ]}
+          />
+        </View>
+      </Pressable>
+
+      <PinModal visible={showPinModal} onClose={closePinModal} />
+    </>
   );
 }
 

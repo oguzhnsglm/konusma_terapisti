@@ -15,6 +15,7 @@ import { useAudio } from '../context/AudioContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMascot } from '../context/MascotContext';
 import { useProgress } from '../context/ProgressContext';
+import { useChildMode } from '../context/ChildModeContext';
 import { filterSearchResults } from '../data/searchData';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
@@ -276,12 +277,66 @@ const palettes: Record<'dark' | 'light', Palette> = {
   },
 } as const;
 
+// Çocuk modu paletleri - Çok renkli ve oyuncu dostu
+const childPalettes: Record<'dark' | 'light', Palette> = {
+  dark: {
+    backgroundGradient: ['#FFE5E5', '#E5F0FF', '#E5F9F7'],
+    sidebarBg: 'rgba(255, 200, 200, 0.8)',
+    sidebarBorder: 'rgba(255, 100, 100, 0.5)',
+    textPrimary: '#1a1a1a',
+    textSecondary: '#333333',
+    textMuted: '#666666',
+    panelBg: 'rgba(255, 230, 230, 0.9)',
+    panelBorder: 'rgba(255, 107, 107, 0.5)',
+    translucentPanel: 'rgba(255, 200, 200, 0.3)',
+    linkBorder: 'rgba(255, 107, 107, 0.4)',
+    cardBorder: 'rgba(255, 107, 107, 0.4)',
+    statBg: 'rgba(255, 230, 230, 0.8)',
+    statBorder: 'rgba(78, 205, 196, 0.5)',
+    activityBg: 'rgba(229, 240, 255, 0.9)',
+    activityBorder: 'rgba(78, 205, 196, 0.5)',
+    floatingBg: 'rgba(255, 230, 102, 0.95)',
+    floatingBorder: 'rgba(255, 200, 100, 0.6)',
+    sectionLink: '#FF6B6B',
+    accent: '#4ECDC4',
+    accentContrast: '#FFE66D',
+    statIconBg: 'rgba(255, 200, 200, 0.5)',
+  },
+  light: {
+    backgroundGradient: ['#FFE5E5', '#E5F0FF', '#E5F9F7'],
+    sidebarBg: 'rgba(255, 200, 200, 0.8)',
+    sidebarBorder: 'rgba(255, 100, 100, 0.5)',
+    textPrimary: '#1a1a1a',
+    textSecondary: '#333333',
+    textMuted: '#666666',
+    panelBg: 'rgba(255, 230, 230, 0.9)',
+    panelBorder: 'rgba(255, 107, 107, 0.5)',
+    translucentPanel: 'rgba(255, 200, 200, 0.3)',
+    linkBorder: 'rgba(255, 107, 107, 0.4)',
+    cardBorder: 'rgba(255, 107, 107, 0.4)',
+    statBg: 'rgba(255, 230, 230, 0.8)',
+    statBorder: 'rgba(78, 205, 196, 0.5)',
+    activityBg: 'rgba(229, 240, 255, 0.9)',
+    activityBorder: 'rgba(78, 205, 196, 0.5)',
+    floatingBg: 'rgba(255, 230, 102, 0.95)',
+    floatingBorder: 'rgba(255, 200, 100, 0.6)',
+    sectionLink: '#FF6B6B',
+    accent: '#4ECDC4',
+    accentContrast: '#FFE66D',
+    statIconBg: 'rgba(255, 200, 200, 0.5)',
+  },
+} as const;
+
 export default function HomePage() {
   const router = useRouter();
   const { playSfx } = useAudio();
   const { theme } = useTheme();
   const { celebrate } = useMascot();
-  const palette = palettes[theme];
+  const { isChildMode } = useChildMode();
+  
+  // Çocuk modu aktif ise çocuk paletini, aksi halde normal paleti kullan
+  const activeTheme = isChildMode ? 'light' : theme;
+  const palette = isChildMode ? childPalettes[activeTheme] : palettes[theme];
 
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -665,13 +720,9 @@ function HeroCard({ tile, palette, onPress }: { tile: HeroTile; palette: Palette
       onPress={onPress} 
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
-      style={({ pressed }) => [
+      style={[
         styles.heroCard,
-        isHovered && { 
-          transform: [{ translateY: -6 }, { scale: 1.04 }],
-          transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-        },
-        pressed && { transform: [{ translateY: -2 }, { scale: 0.98 }] }
+        isHovered && styles.heroCardHovered,
       ]}
       data-animate="fade-in"
       data-glow={tile.glow}
@@ -719,18 +770,14 @@ function ActivityCardView({ activity, palette, onPress }: { activity: ActivityCa
       onPress={onPress}
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
-      style={({ pressed }) => [
+      style={[
         styles.activityCard,
         {
           backgroundColor: palette.activityBg,
           borderColor: isHovered ? palette.cardBorder : palette.activityBorder,
         },
-        isHovered && { 
-          transform: [{ translateY: -5 }, { scale: 1.05 }],
-          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-        },
+        isHovered && styles.shadowMd,
         !isHovered && styles.shadowSm,
-        pressed && { transform: [{ translateY: -2 }, { scale: 0.98 }] },
       ]}
       data-animate="fade-in"
       data-card="activity"
@@ -739,10 +786,6 @@ function ActivityCardView({ activity, palette, onPress }: { activity: ActivityCa
       <View style={[
         styles.activityIcon, 
         { backgroundColor: activity.accent },
-        isHovered && { 
-          opacity: 1,
-          transform: [{ scale: 1.1 }, { rotate: '5deg' }],
-        }
       ]}>
         <Ionicons 
           name={activity.icon} 
