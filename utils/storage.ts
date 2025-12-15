@@ -146,3 +146,11 @@ export async function verifyPin(pin: string): Promise<boolean> {
     return false;
   }
 }
+export async function resetPINToDefault(): Promise<void> {
+  try {
+    await setPIN(DEFAULT_PIN);
+    await resetPinAttempts();
+  } catch (error) {
+    console.error('Error resetting PIN:', error);
+  }
+}

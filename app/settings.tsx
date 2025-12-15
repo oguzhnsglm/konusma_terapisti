@@ -301,6 +301,23 @@ export default function SettingsPage() {
             </View>
             <Ionicons name="chevron-forward-outline" size={20} color={palette.textMuted} />
           </Pressable>
+          <Pressable 
+            onPress={async () => {
+              const { resetPINToDefault } = await import('../utils/storage');
+              await resetPINToDefault();
+              alert('PIN sıfırlandı: 1234');
+            }}
+            style={[styles.securityItem]}
+          >
+            <View style={styles.securityItemLeft}>
+              <Ionicons name="refresh-outline" size={20} color={palette.accentSecondary} />
+              <View>
+                <Text style={[styles.securityItemTitle, { color: palette.textPrimary }]}>PIN'i Sıfırla</Text>
+                <Text style={[styles.securityItemDesc, { color: palette.textMuted }]}>PIN'i varsayılan değere döndür</Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward-outline" size={20} color={palette.textMuted} />
+          </Pressable>
         </View>
 
         {/* App Preferences */}

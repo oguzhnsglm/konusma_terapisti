@@ -240,10 +240,15 @@ const styles = StyleSheet.create({
   pinInputContainer: {
     gap: 20,
     marginVertical: 12,
+    alignItems: 'center',
   },
   hiddenInput: {
-    height: 0,
-    opacity: 0,
+    width: 200,
+    height: 50,
+    textAlign: 'center',
+    fontSize: 20,
+    color: 'transparent',
+    backgroundColor: 'transparent',
   },
   pinDots: {
     flexDirection: 'row',
