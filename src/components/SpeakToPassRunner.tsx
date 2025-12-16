@@ -44,7 +44,7 @@ const words = [
   'KAPI',
   'MASA',
   'KALEM',
-  'KİTAP',
+  'KITAP',
   'ARABA',
   'GÜNEŞ',
   'BALIK',
@@ -53,6 +53,16 @@ const words = [
   'ÇAY',
   'OKUL',
 ];
+
+const gateColors = ['#5aa7ff', '#ff6f91', '#9c6bff', '#ff8bd1', '#64f5c4'];
+
+const withAlpha = (hex: string, alpha: number) => {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+};
 
 // Lazy native voice import to avoid bundling on web.
 let Voice: VoiceModule | null = null;
@@ -73,6 +83,13 @@ export default function SpeakToPassRunner() {
   const animationRef = useRef<number | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const feedbackTimeoutRef = useRef<number | null>(null);
+  const starsRef = useRef<{ x: number; y: number; r: number; o: number }[]>([]);
+  const usedWordsRef = useRef<string[]>([]);
+  const hopTimerRef = useRef<number>(0);
+  const gateColorIndexRef = useRef<number>(-1);
+  const gateColorRef = useRef<string>(gateColors[0]);
+  const autoStartRef = useRef<boolean>(false);
+  const passBoostRef = useRef<boolean>(false);
 
   // Game refs
   const gameStateRef = useRef<GameState>('IDLE');
@@ -85,7 +102,7 @@ export default function SpeakToPassRunner() {
 
   // State
   const [score, setScore] = useState(0);
-  const [isStarted, setIsStarted] = useState(false);
+  const [isStarted, setIsStarted] = useState(true);
   const [micLevel, setMicLevel] = useState(10);
   const [feedbackText, setFeedbackText] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
@@ -107,14 +124,34 @@ export default function SpeakToPassRunner() {
     const canvas = canvasRef.current;
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
+    // regen stars for current viewport
+    starsRef.current = Array.from({ length: 140 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.5,
+      o: Math.random() * 0.5 + 0.25,
+    }));
     ctxRef.current = canvas.getContext('2d');
   }, []);
 
   const resetRound = useCallback(() => {
     wallDistanceRef.current = 100;
     isGateOpeningRef.current = false;
+    passBoostRef.current = false;
     gateOpenYRef.current = 0;
-    const next = words[Math.floor(Math.random() * words.length)];
+    hopTimerRef.current = 0;
+    gateColorIndexRef.current =
+      (gateColorIndexRef.current + 1) % gateColors.length;
+    gateColorRef.current = gateColors[gateColorIndexRef.current];
+    if (usedWordsRef.current.length >= words.length) {
+      usedWordsRef.current = [];
+    }
+    const available = words.filter((w) => !usedWordsRef.current.includes(w));
+    const next =
+      available.length > 0
+        ? available[Math.floor(Math.random() * available.length)]
+        : words[Math.floor(Math.random() * words.length)];
+    usedWordsRef.current.push(next);
     wallWordRef.current = next;
     setCurrentWord(next);
     setFeedbackText('');
@@ -130,25 +167,30 @@ export default function SpeakToPassRunner() {
   const updateGameLogic = useCallback(() => {
     if (!ctxRef.current) return;
     if (gameStateRef.current === 'RUNNING') {
-      wallDistanceRef.current -= 0.6;
+      const approachSpeed = passBoostRef.current ? 0.6 : 0.35;
+      wallDistanceRef.current -= approachSpeed;
 
       if (isGateOpeningRef.current) {
-        gateOpenYRef.current += 5;
+        gateOpenYRef.current = Math.min(gateOpenYRef.current + 10, 180);
       }
 
-      if (wallDistanceRef.current <= 15) {
+      if (hopTimerRef.current > 0) {
+        hopTimerRef.current -= 1;
+      }
+
+      if (wallDistanceRef.current <= 20) {
         if (isGateOpeningRef.current) {
           if (wallDistanceRef.current <= 0) {
             scoreRef.current += 1;
             setScore(scoreRef.current);
             resetRound();
           }
-        } else if (wallDistanceRef.current <= 10) {
+        } else if (wallDistanceRef.current <= 14) {
           startBounce();
         }
       }
     } else if (gameStateRef.current === 'BOUNCING') {
-      wallDistanceRef.current += (60 - wallDistanceRef.current) * 0.1;
+      wallDistanceRef.current += (65 - wallDistanceRef.current) * 0.12;
       bounceTimerRef.current -= 1;
       if (bounceTimerRef.current <= 0) {
         gameStateRef.current = 'RUNNING';
@@ -162,6 +204,166 @@ export default function SpeakToPassRunner() {
     if (!ctx || !canvas) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Space backdrop
+    const bgGrad = ctx.createRadialGradient(
+      canvas.width * 0.4,
+      canvas.height * 0.35,
+      canvas.width * 0.1,
+      canvas.width * 0.5,
+      canvas.height * 0.5,
+      canvas.width * 0.7,
+    );
+    bgGrad.addColorStop(0, '#0c1a3a');
+    bgGrad.addColorStop(1, '#050913');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Stars
+    if (starsRef.current.length === 0) {
+      starsRef.current = Array.from({ length: 120 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.5,
+        o: Math.random() * 0.5 + 0.25,
+      }));
+    }
+    starsRef.current.forEach((s) => {
+      ctx.fillStyle = `rgba(255,255,255,${s.o})`;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Mascot-family planets
+    const isReacting = feedbackState === 'good';
+
+    const drawMascotPlanet = (
+      x: number,
+      y: number,
+      radius: number,
+      variant: 'smile' | 'baby' | 'elder' | 'wink',
+      reactType?: 'blink' | 'surprise' | 'wink' | 'happy',
+    ) => {
+      const grad = ctx.createLinearGradient(x, y - radius, x, y + radius);
+      if (variant === 'elder') {
+        grad.addColorStop(0, '#8da3c2');
+        grad.addColorStop(1, '#d0d6e4');
+      } else if (variant === 'baby') {
+        grad.addColorStop(0, '#a8e8ff');
+        grad.addColorStop(1, '#ffbce8');
+      } else if (variant === 'wink') {
+        grad.addColorStop(0, '#8ef2d2');
+        grad.addColorStop(1, '#6d9bff');
+      } else {
+        grad.addColorStop(0, '#6fa2ff');
+        grad.addColorStop(1, '#ff90c8');
+      }
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // glow halo
+      const halo = ctx.createRadialGradient(x, y, radius * 0.6, x, y, radius * 1.4);
+      halo.addColorStop(0, 'rgba(255,255,255,0.08)');
+      halo.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = halo;
+      ctx.beginPath();
+      ctx.arc(x, y, radius * 1.4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // tuft / crown
+      if (variant !== 'elder') {
+        ctx.fillStyle = '#ffb347';
+        ctx.beginPath();
+        ctx.ellipse(x - radius * 0.12, y - radius + 8, radius * 0.16, radius * 0.12, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ff6fb1';
+        ctx.beginPath();
+        ctx.ellipse(x + radius * 0.12, y - radius + 10, radius * 0.15, radius * 0.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // eyes
+      const eyeOffsetX = radius * 0.3;
+      const eyeOffsetY = radius * 0.15;
+      ctx.fillStyle = variant === 'elder' ? '#1f283d' : '#152033';
+      ctx.beginPath();
+      const leftEyeTall = reactType === 'surprise' && isReacting ? radius * 0.22 : radius * 0.18;
+      ctx.ellipse(x - eyeOffsetX, y - eyeOffsetY, radius * 0.16, leftEyeTall, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      if (variant === 'wink' || (reactType === 'wink' && isReacting)) {
+        ctx.moveTo(x + eyeOffsetX - radius * 0.18, y - eyeOffsetY);
+        ctx.quadraticCurveTo(
+          x + eyeOffsetX,
+          y - eyeOffsetY + radius * 0.08,
+          x + eyeOffsetX + radius * 0.18,
+          y - eyeOffsetY,
+        );
+      } else {
+        const rightEyeTall = reactType === 'surprise' && isReacting ? radius * 0.22 : radius * 0.18;
+        ctx.ellipse(x + eyeOffsetX, y - eyeOffsetY, radius * 0.16, rightEyeTall, 0, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(x - eyeOffsetX + radius * 0.08, y - eyeOffsetY - radius * 0.05, radius * 0.07, 0, Math.PI * 2);
+      if (!(variant === 'wink' || (reactType === 'wink' && isReacting))) {
+        ctx.arc(x + eyeOffsetX + radius * 0.08, y - eyeOffsetY - radius * 0.05, radius * 0.07, 0, Math.PI * 2);
+      }
+      ctx.fill();
+
+      // cheeks
+      ctx.fillStyle = variant === 'elder' ? 'rgba(230,180,180,0.7)' : 'rgba(255,180,190,0.8)';
+      ctx.beginPath();
+      ctx.ellipse(x - radius * 0.28, y + radius * 0.05, radius * 0.2, radius * 0.12, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + radius * 0.28, y + radius * 0.05, radius * 0.2, radius * 0.12, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // mouth / pacifier
+      ctx.strokeStyle = '#1f283d';
+      ctx.lineWidth = radius * 0.08;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      if (variant === 'elder') {
+        ctx.arc(x, y + radius * 0.18, radius * 0.22, Math.PI * 0.1, Math.PI * 0.9);
+        // small mustache
+        ctx.moveTo(x - radius * 0.08, y + radius * 0.15);
+        ctx.quadraticCurveTo(x, y + radius * 0.1, x + radius * 0.08, y + radius * 0.15);
+      } else if (variant === 'baby') {
+        if (isReacting && reactType === 'happy') {
+          // pacifier
+          const pacR = radius * 0.16;
+          ctx.closePath();
+          ctx.beginPath();
+          ctx.fillStyle = '#ffd35a';
+          ctx.strokeStyle = '#ff9ac4';
+          ctx.lineWidth = radius * 0.05;
+          ctx.arc(x, y + radius * 0.18, pacR, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.fillStyle = '#5ad6ff';
+          ctx.arc(x, y + radius * 0.18, pacR * 0.55, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.arc(x, y + radius * 0.2, radius * 0.18, Math.PI * 0.2, Math.PI * 0.8);
+          ctx.stroke();
+          return;
+        }
+      } else if (variant === 'wink') {
+        ctx.arc(x, y + radius * 0.16, radius * 0.2, Math.PI * 0.15, Math.PI * 0.85);
+      } else {
+        ctx.arc(x, y + radius * 0.16, radius * 0.24, Math.PI * 0.1, Math.PI * 0.9);
+      }
+      ctx.stroke();
+    };
+
+    drawMascotPlanet(90, 130, 70, 'baby', 'happy');
+    drawMascotPlanet(canvas.width - 150, canvas.height * 0.22, 90, 'elder', 'surprise');
+    drawMascotPlanet(canvas.width * 0.32, canvas.height * 0.18, 65, 'wink', 'wink');
+    drawMascotPlanet(canvas.width * 0.75, canvas.height * 0.28, 60, 'smile', 'blink');
 
     const vanishX = canvas.width * 0.6;
     const vanishY = canvas.height * 0.3;
@@ -217,6 +419,7 @@ export default function SpeakToPassRunner() {
       const wallX = roadCenterX - wallW / 2;
       const wallY = currentY - wallH + 50 * currentScale;
 
+      const wallTint = gateColorRef.current || gateColors[0];
       ctx.beginPath();
       ctx.moveTo(wallX + wallW, wallY);
       ctx.lineTo(wallX + wallW + 20 * currentScale, wallY - 20 * currentScale);
@@ -225,22 +428,13 @@ export default function SpeakToPassRunner() {
         wallY + wallH - 20 * currentScale,
       );
       ctx.lineTo(wallX + wallW, wallY + wallH);
-      ctx.fillStyle = '#8D6E63';
+      ctx.fillStyle = withAlpha(wallTint, 0.25);
       ctx.fill();
 
-      ctx.fillStyle = '#EFEBE9';
+      ctx.fillStyle = withAlpha(wallTint, 0.18);
       ctx.fillRect(wallX, wallY, wallW, wallH);
 
-      ctx.strokeStyle = '#D7CCC8';
-      ctx.lineWidth = 4 * currentScale;
-      ctx.beginPath();
-      for (let i = 0; i < 5; i += 1) {
-        ctx.moveTo(wallX + (wallW / 5) * i, wallY);
-        ctx.lineTo(wallX + (wallW / 5) * i, wallY + wallH);
-      }
-      ctx.stroke();
-
-      ctx.strokeStyle = '#5D4037';
+      ctx.strokeStyle = withAlpha(wallTint, 0.8);
       ctx.lineWidth = 5 * currentScale;
       ctx.strokeRect(wallX, wallY, wallW, wallH);
 
@@ -249,22 +443,28 @@ export default function SpeakToPassRunner() {
       const gateX = wallX + (wallW - gateW) / 2;
       const gateY = wallY + wallH - gateH;
 
-      ctx.fillStyle = '#455A64';
-      ctx.fillRect(gateX, gateY, gateW, gateH);
-
+      const roadBehindColor = '#90A4AE';
+      const gateTint = gateColorRef.current || gateColors[0];
       const slideY = gateOpenYRef.current * currentScale * 3;
-      ctx.fillStyle = '#A1887F';
-      if (gateH - slideY > 0) {
+      const isOpening = isGateOpeningRef.current && slideY > 0;
+      if (!isOpening) {
+        const gateBaseColor =
+          gateOpenYRef.current > 4 ? roadBehindColor : withAlpha(gateTint, 0.08);
+        ctx.fillStyle = gateBaseColor;
+        ctx.fillRect(gateX, gateY, gateW, gateH);
+        ctx.fillStyle = withAlpha(gateTint, 0.08);
         ctx.fillRect(gateX, gateY - slideY, gateW, gateH);
-        ctx.strokeRect(gateX, gateY - slideY, gateW, gateH);
+      }
+      ctx.strokeStyle = withAlpha(gateTint, isOpening ? 0.5 : 0.55);
+      ctx.lineWidth = 3 * currentScale;
+      ctx.strokeRect(gateX, gateY - slideY, gateW, gateH);
 
+      if (!isOpening) {
         const fontSize = 40 * currentScale;
         ctx.font = `bold ${fontSize}px 'Fredoka One'`;
         ctx.fillStyle = 'white';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 3 * currentScale;
         const textY = gateY - slideY + gateH / 2;
         ctx.strokeText(wallWordRef.current, gateX + gateW / 2, textY);
         ctx.fillText(wallWordRef.current, gateX + gateW / 2, textY);
@@ -272,14 +472,21 @@ export default function SpeakToPassRunner() {
     }
 
     const ballX = canvas.width / 2 - 50;
-    const ballY = canvas.height - 100;
-    const ballRadius = 30;
+    const baseBallY = canvas.height - 100;
+    const ballRadius = 32;
+    const hopPhase = hopTimerRef.current > 0 ? (50 - hopTimerRef.current) / 50 : 0;
+    const hopOffset =
+      hopTimerRef.current > 0
+        ? Math.sin(hopPhase * Math.PI) * 28 * (1 - hopPhase * 0.35)
+        : 0;
+    const ballY = baseBallY - hopOffset;
 
-    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
     ctx.beginPath();
     ctx.ellipse(
       ballX,
-      ballY + ballRadius - 5,
+      ballY + ballRadius - 6,
       ballRadius,
       ballRadius / 3,
       0,
@@ -288,39 +495,71 @@ export default function SpeakToPassRunner() {
     );
     ctx.fill();
 
-    const grad = ctx.createRadialGradient(
-      ballX - 10,
-      ballY - 10,
-      5,
-      ballX,
-      ballY,
-      ballRadius,
-    );
-    grad.addColorStop(0, '#FFCC80');
-    grad.addColorStop(1, '#EF6C00');
-    ctx.fillStyle = grad;
-
+    // Body gradient (mascot look)
+    const bodyGrad = ctx.createLinearGradient(ballX, ballY - ballRadius, ballX, ballY + ballRadius);
+    bodyGrad.addColorStop(0, '#5e8bff');
+    bodyGrad.addColorStop(0.45, '#7ca7ff');
+    bodyGrad.addColorStop(1, '#ff7bb0');
+    ctx.fillStyle = bodyGrad;
     ctx.beginPath();
     ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = 'black';
+    // Top tuft
+    ctx.fillStyle = '#ffb347';
     ctx.beginPath();
-    ctx.arc(ballX - 10, ballY - 5, 4, 0, Math.PI * 2);
+    ctx.ellipse(ballX - 4, ballY - ballRadius + 6, 6, 5, 0, 0, Math.PI * 2);
     ctx.fill();
+    ctx.fillStyle = '#ff6fb1';
     ctx.beginPath();
-    ctx.arc(ballX + 10, ballY - 5, 4, 0, Math.PI * 2);
+    ctx.ellipse(ballX + 4, ballY - ballRadius + 8, 5, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#7be8ff';
+    ctx.beginPath();
+    ctx.ellipse(ballX, ballY - ballRadius + 2, 4, 4, 0, 0, Math.PI * 2);
     ctx.fill();
 
+    // Eyes
+    const eyeOffsetX = 10;
+    const eyeOffsetY = 6;
+    ctx.fillStyle = '#1f283d';
+    ctx.beginPath();
+    ctx.ellipse(ballX - eyeOffsetX, ballY - eyeOffsetY, 6, 7, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(ballX + eyeOffsetX, ballY - eyeOffsetY, 6, 7, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(ballX - eyeOffsetX + 2, ballY - eyeOffsetY - 2, 2.6, 0, Math.PI * 2);
+    ctx.arc(ballX + eyeOffsetX + 2, ballY - eyeOffsetY - 2, 2.6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.beginPath();
+    ctx.arc(ballX - eyeOffsetX - 2, ballY - eyeOffsetY + 2, 1.6, 0, Math.PI * 2);
+    ctx.arc(ballX + eyeOffsetX - 2, ballY - eyeOffsetY + 2, 1.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Cheeks
+    ctx.fillStyle = 'rgba(255,170,170,0.75)';
+    ctx.beginPath();
+    ctx.ellipse(ballX - 12, ballY + 4, 7, 5, 0, 0, Math.PI * 2);
+    ctx.ellipse(ballX + 12, ballY + 4, 7, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Smile
+    ctx.strokeStyle = '#1f283d';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
     ctx.beginPath();
     if (gameStateRef.current === 'BOUNCING') {
-      ctx.arc(ballX, ballY + 15, 8, Math.PI, 0);
+      ctx.arc(ballX, ballY + 8, 10, Math.PI * 0.1, Math.PI * 0.9);
     } else if (isGateOpeningRef.current) {
-      ctx.arc(ballX, ballY + 10, 8, 0, Math.PI * 2);
+      ctx.arc(ballX, ballY + 10, 11, Math.PI * 0.2, Math.PI * 0.8);
     } else {
-      ctx.ellipse(ballX, ballY + 10, 6, 3, 0, 0, Math.PI * 2);
+      ctx.arc(ballX, ballY + 12, 9, Math.PI * 0.2, Math.PI * 0.8);
     }
-    ctx.fill();
+    ctx.stroke();
   }, []);
 
   const loop = useCallback(() => {
@@ -332,6 +571,17 @@ export default function SpeakToPassRunner() {
   const normalizeText = (text: string) =>
     text.trim().toUpperCase().replace(/İ/g, 'I').replace(/[^A-ZÇĞÖŞÜ ]/g, '');
 
+  const triggerGateOpen = useCallback(() => {
+    if (gameStateRef.current !== 'RUNNING') return;
+    isGateOpeningRef.current = true;
+    passBoostRef.current = true;
+    gateOpenYRef.current = Math.max(gateOpenYRef.current, 60);
+    if (wallDistanceRef.current > 55) {
+      wallDistanceRef.current = 55;
+    }
+    hopTimerRef.current = 50; // add celebratory hop
+  }, []);
+
   const checkWordWeb = useCallback(
     (spoken: string) => {
       const normalized = normalizeText(spoken);
@@ -342,7 +592,7 @@ export default function SpeakToPassRunner() {
 
       if (gameStateRef.current === 'RUNNING' && !isGateOpeningRef.current) {
         if (normalized.includes(target)) {
-          isGateOpeningRef.current = true;
+          triggerGateOpen();
           setFeedbackState('good');
           cleanupFeedbackTimeout();
           feedbackTimeoutRef.current = window.setTimeout(() => {
@@ -587,6 +837,13 @@ export default function SpeakToPassRunner() {
     };
   }, [cleanupFeedbackTimeout, isWeb, resizeCanvas]);
 
+  // Auto-start game on mount to skip landing screen
+  useEffect(() => {
+    if (autoStartRef.current) return;
+    autoStartRef.current = true;
+    startGame();
+  }, [startGame]);
+
   // Mobile lifecycle
   useEffect(() => {
     if (isWeb) return;
@@ -599,16 +856,16 @@ export default function SpeakToPassRunner() {
 
   const feedbackColor =
     feedbackState === 'good'
-      ? 'green'
+      ? '#5dffb6'
       : feedbackState === 'bad'
-        ? 'red'
-        : '#333';
+        ? '#ff6f91'
+        : '#b8d4ff';
   const feedbackBorder =
     feedbackState === 'good'
-      ? 'green'
+      ? '#5dffb6'
       : feedbackState === 'bad'
-        ? 'red'
-        : '#FFD180';
+        ? '#ff6f91'
+        : '#7cc7ff';
 
   // Mobile UI (no canvas)
   if (!isWeb) {
@@ -725,7 +982,8 @@ export default function SpeakToPassRunner() {
         width: '100%',
         height: '100%',
         overflow: 'hidden',
-        backgroundColor: '#e0e0e0',
+        background: 'radial-gradient(circle at 20% 20%, #11162b 0%, #0a0f1f 50%, #070912 100%)',
+        color: '#e9f5ff',
         fontFamily: "'Fredoka One', cursive",
       }}
     >
@@ -735,8 +993,8 @@ export default function SpeakToPassRunner() {
           width: '100%',
           height: '100%',
           background:
-            'radial-gradient(circle at 30% 30%, #ffffff 0%, #cfd8dc 100%)',
-          filter: 'blur(5px)',
+            'radial-gradient(circle at 30% 30%, rgba(80,150,255,0.3) 0%, rgba(20,30,60,0.8) 45%, rgba(5,8,15,0.95) 100%)',
+          filter: 'blur(10px)',
           zIndex: 1,
         }}
       />
@@ -763,20 +1021,22 @@ export default function SpeakToPassRunner() {
             transform: 'translateY(-50%)',
             width: 20,
             height: 300,
-            background: 'rgba(0,0,0,0.2)',
-            borderRadius: 10,
-            border: '2px solid rgba(255,255,255,0.8)',
+            background: 'linear-gradient(180deg, rgba(67,97,238,0.15), rgba(17,24,39,0.6))',
+            borderRadius: 12,
+            border: '1px solid rgba(99,179,237,0.5)',
             overflow: 'hidden',
+            boxShadow: '0 0 20px rgba(99,179,237,0.35)',
           }}
         >
           <div
             style={{
               width: '100%',
               height: `${micLevel}%`,
-              background: 'linear-gradient(to top, #4CAF50, #8BC34A)',
+              background: 'linear-gradient(180deg, #26ffd3, #5d5dff)',
               position: 'absolute',
               bottom: 0,
-              transition: 'height 0.1s',
+              transition: 'height 0.1s ease-out',
+              boxShadow: '0 0 16px rgba(38,255,211,0.6)',
             }}
           />
         </div>
@@ -787,8 +1047,9 @@ export default function SpeakToPassRunner() {
             right: 40,
             top: 40,
             fontSize: '3rem',
-            color: '#333',
-            textShadow: '2px 2px 0px white',
+            color: '#8ef4ff',
+            textShadow: '0 0 10px rgba(142,244,255,0.8), 0 0 24px rgba(93,248,255,0.6)',
+            letterSpacing: 2,
           }}
         >
           {score}
@@ -801,13 +1062,13 @@ export default function SpeakToPassRunner() {
               left: '50%',
               bottom: 30,
               transform: 'translateX(-50%)',
-              background: '#ffe0b2',
-              color: '#bf360c',
-              padding: '10px 18px',
+              background: 'rgba(30, 40, 70, 0.85)',
+              color: '#ff9ac4',
+              padding: '12px 20px',
               borderRadius: 14,
-              border: '2px solid #ff9800',
+              border: '1px solid rgba(255, 154, 196, 0.7)',
               fontSize: 14,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              boxShadow: '0 6px 20px rgba(0,0,0,0.3), 0 0 14px rgba(255,154,196,0.35)',
             }}
           >
             {errorText}
@@ -822,10 +1083,10 @@ export default function SpeakToPassRunner() {
             transform: 'translateX(-50%)',
             fontSize: '2rem',
             color: feedbackColor,
-            background: 'white',
-            padding: '10px 30px',
-            borderRadius: 20,
-            boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
+            background: 'rgba(13, 22, 43, 0.8)',
+            padding: '12px 34px',
+            borderRadius: 24,
+            boxShadow: '0 0 18px rgba(93,248,255,0.5), 0 10px 30px rgba(0,0,0,0.35)',
             display: showFeedback ? 'block' : 'none',
             zIndex: 15,
             border: `3px solid ${feedbackBorder}`,

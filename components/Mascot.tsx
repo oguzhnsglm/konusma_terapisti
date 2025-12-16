@@ -27,12 +27,12 @@ export default function Mascot() {
       Animated.timing(bounceAnim, {
         toValue: -20,
         duration: 200,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(bounceAnim, {
         toValue: 0,
         duration: 200,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start();
 
@@ -44,13 +44,13 @@ export default function Mascot() {
       Animated.timing(tooltipOpacity, {
         toValue: 1,
         duration: 200,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.delay(2500),
       Animated.timing(tooltipOpacity, {
         toValue: 0,
         duration: 200,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start(() => setShowTooltip(false));
   };
@@ -63,13 +63,13 @@ export default function Mascot() {
           toValue: 1,
           duration: 2000,
           easing: Easing.inOut(Easing.sin),
-          useNativeDriver: true,
+        useNativeDriver: false,
         }),
         Animated.timing(float, {
           toValue: 0,
           duration: 2000,
           easing: Easing.inOut(Easing.sin),
-          useNativeDriver: true,
+        useNativeDriver: false,
         }),
       ])
     );
@@ -104,8 +104,8 @@ export default function Mascot() {
     if (isCelebrating) {
       const pulse = Animated.loop(
         Animated.sequence([
-          Animated.timing(scale, { toValue: 1.15, duration: 220, useNativeDriver: true }),
-          Animated.timing(scale, { toValue: 1, duration: 220, useNativeDriver: true }),
+          Animated.timing(scale, { toValue: 1.15, duration: 220, useNativeDriver: false }),
+          Animated.timing(scale, { toValue: 1, duration: 220, useNativeDriver: false }),
         ]),
         { iterations: 3 },
       );
