@@ -4,13 +4,21 @@ import { useProgress } from '../../context/ProgressContext';
 import { useAudio } from '../../context/AudioContext';
 
 const quickGames = [
-  { title: 'Kelime Tamamlama', route: '/games/word-fill', color: '#7f6bff' },
-  { title: 'Hafıza Oyunu', route: '/games/memory', color: '#ff8fa3' },
-  { title: 'Kafiye Oyunu', route: '/games/rhyme', color: '#5ac8fa' },
-  { title: 'Renk Oyunu', route: '/games/colors', color: '#34c759' },
-  { title: 'Sayma Oyunu', route: '/games/counting', color: '#ffb347' },
-  { title: 'Söyle - Eşleş - Geç', route: '/games/speak-to-pass', color: '#ff9bd5' },
-] satisfies { title: string; route: Href; color: string }[];
+  { title: 'Kelime Tamamlama', route: '/games/word-fill', color: '#7f6bff', emoji: '✏️' },
+  { title: 'Hafıza Oyunu', route: '/games/memory', color: '#ff8fa3', emoji: '🧠' },
+  { title: 'Kafiye Oyunu', route: '/games/rhyme', color: '#5ac8fa', emoji: '🎵' },
+  { title: 'Renk Oyunu', route: '/games/colors', color: '#34c759', emoji: '🎨' },
+  { title: 'Sayma Oyunu', route: '/games/counting', color: '#ffb347', emoji: '🔢' },
+  { title: 'Söyle - Eşleş - Geç', route: '/games/speak-to-pass', color: '#ff9bd5', emoji: '🎤' },
+  { title: 'Canavar Besle', route: '/games/monster-feed', color: '#9B59B6', emoji: '🍔' },
+  { title: 'Roket Fırlat', route: '/games/rocket-launch', color: '#3498DB', emoji: '🚀' },
+  { title: 'Büyücü Oyunu', route: '/games/wizard-magic', color: '#8E44AD', emoji: '🧙‍♂️' },
+  { title: 'Kurbağa Zıpla', route: '/games/frog-jump', color: '#27AE60', emoji: '🐸' },
+  { title: 'Hayalet Kaçır', route: '/games/ghost-chase', color: '#2C3E50', emoji: '👻' },
+  { title: 'Define Avcısı', route: '/games/treasure-hunt', color: '#D4A574', emoji: '🗺️' },
+  { title: 'Ejderhayı Uyut', route: '/games/dragon-wake', color: '#E74C3C', emoji: '🐉' },
+  { title: 'NEUROSHIFT', route: '/games/neuroshift', color: '#00D9FF', emoji: '⚡' },
+] satisfies { title: string; route: Href; color: string; emoji: string }[];
 
 export default function MiniGamesPage() {
   const router = useRouter();
@@ -41,6 +49,9 @@ export default function MiniGamesPage() {
               pressed && styles.pressed,
             ]}
           >
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardEmoji}>{item.emoji}</Text>
+            </View>
             <Text style={styles.cardTitle}>{item.title}</Text>
             <Text style={styles.cardDesc}>Başlat</Text>
           </Pressable>
@@ -84,7 +95,7 @@ const styles = StyleSheet.create({
     flexBasis: '48%',
     borderRadius: 16,
     padding: 14,
-    minHeight: 100,
+    minHeight: 120,
     justifyContent: 'space-between',
     shadowColor: '#000',
     shadowOpacity: 0.08,
@@ -92,10 +103,17 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     elevation: 3,
   },
+  cardHeader: {
+    marginBottom: 8,
+  },
+  cardEmoji: {
+    fontSize: 32,
+  },
   cardTitle: {
     color: '#fff',
     fontWeight: '800',
-    fontSize: 16,
+    fontSize: 15,
+    marginBottom: 4,
   },
   cardDesc: {
     color: 'rgba(255,255,255,0.9)',

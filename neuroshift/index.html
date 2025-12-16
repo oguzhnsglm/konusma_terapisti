@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>NEUROSHIFT</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Intro Screen -->
+  <div id="intro-screen" class="screen active">
+    <div class="intro-content">
+      <h1 class="glitch-text" data-text="NEUROSHIFT">NEUROSHIFT</h1>
+      <p class="intro-subtitle">Stabilize the system</p>
+      <button id="start-btn" class="pulse-btn">Initialize</button>
+      <div class="intro-info">
+        <p>Touch anywhere to interact</p>
+        <p>Keep the system stable</p>
+        <p>Adapt to survive</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Game Screen -->
+  <div id="game-screen" class="screen">
+    <!-- Top UI Bar -->
+    <div class="ui-bar top-bar">
+      <div class="stat-group">
+        <div class="stat-label">STABILITY</div>
+        <div class="bar-container">
+          <div id="stability-bar" class="bar stability-bar" style="width: 50%"></div>
+          <div id="stability-value" class="bar-value">50</div>
+        </div>
+      </div>
+      
+      <div class="stat-group">
+        <div class="stat-label">MOMENTUM</div>
+        <div class="momentum-indicator">
+          <div id="momentum-dots"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chaos Level Indicator -->
+    <div id="chaos-indicator" class="chaos-indicator">
+      <span class="chaos-label">CHAOS</span>
+      <span id="chaos-value" class="chaos-value">0</span>
+    </div>
+
+    <!-- Canvas for Visual Effects -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Task Container -->
+    <div id="task-container" class="task-container">
+      <!-- Dynamic tasks will be injected here -->
+    </div>
+
+    <!-- Mode Activator -->
+    <div class="mode-container">
+      <button id="focus-mode-btn" class="mode-btn" data-mode="focus">
+        <span class="mode-icon">⚡</span>
+        <span class="mode-name">FOCUS</span>
+        <div class="cooldown-overlay"></div>
+      </button>
+      <button id="echo-mode-btn" class="mode-btn" data-mode="echo">
+        <span class="mode-icon">🔄</span>
+        <span class="mode-name">ECHO</span>
+        <div class="cooldown-overlay"></div>
+      </button>
+      <button id="chaos-mode-btn" class="mode-btn" data-mode="chaos">
+        <span class="mode-icon">💥</span>
+        <span class="mode-name">SURGE</span>
+        <div class="cooldown-overlay"></div>
+      </button>
+    </div>
+
+    <!-- Overload Warning -->
+    <div id="overload-warning" class="overload-warning hidden">
+      <div class="overload-text">SYSTEM OVERLOAD</div>
+      <div class="overload-subtitle">Stabilize quickly!</div>
+    </div>
+
+    <!-- Level Complete -->
+    <div id="level-complete" class="level-complete hidden">
+      <div class="complete-content">
+        <h2 class="complete-title">SYSTEM STABILIZED</h2>
+        <div class="complete-stats">
+          <div class="complete-stat">
+            <span class="stat-number" id="final-stability">0</span>
+            <span class="stat-text">Peak Stability</span>
+          </div>
+          <div class="complete-stat">
+            <span class="stat-number" id="tasks-completed">0</span>
+            <span class="stat-text">Tasks Completed</span>
+          </div>
+        </div>
+        <button id="continue-btn" class="pulse-btn">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="difficulty.js"></script>
+  <script src="chaos.js"></script>
+  <script src="tasks.js"></script>
+  <script src="modes.js"></script>
+  <script src="ui.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
